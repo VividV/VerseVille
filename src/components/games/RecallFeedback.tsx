@@ -42,6 +42,7 @@ export function RecallFeedback({ score }: { score: RecallScore }) {
           }
         })}
       </p>
+      {score.correctWords < score.diff.length && (
       <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-soft">
         <li>
           <span className="rounded bg-leaf-light px-1 font-bold text-leaf-dark">word</span> correction ({score.wrongWords})
@@ -53,6 +54,7 @@ export function RecallFeedback({ score }: { score: RecallScore }) {
           <del className="px-1">word</del> extra ({score.extraWords})
         </li>
       </ul>
+      )}
     </section>
   )
 }

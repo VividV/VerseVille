@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { GameSession } from '../../types/games'
 import type { Scripture } from '../../types/scripture'
 import { BAND_MESSAGES, GAME_INFO, accuracyBand, toPercent } from '../../engine/games/gameRules'
@@ -5,7 +6,16 @@ import { ScriptureText } from '../scripture/ScriptureText'
 import { RecallFeedback } from './RecallFeedback'
 
 /** Body of the completion screen: accuracy, encouragement and feedback. */
-export function GameResultScreen({ session, scripture }: { session: GameSession; scripture: Scripture }) {
+/** `children` (e.g. mastery progress) is shown right under the score. */
+export function GameResultScreen({
+  session,
+  scripture,
+  children,
+}: {
+  session: GameSession
+  scripture: Scripture
+  children?: ReactNode
+}) {
   const percent = toPercent(session.accuracy)
   const band = BAND_MESSAGES[accuracyBand(session.accuracy)]
   const details = session.details
@@ -39,6 +49,8 @@ export function GameResultScreen({ session, scripture }: { session: GameSession;
           </p>
         )}
       </div>
+
+      {children}
 
       {details.kind === 'recall' && <RecallFeedback score={details.score} />}
 

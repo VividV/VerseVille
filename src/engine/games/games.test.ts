@@ -27,7 +27,7 @@ import {
   type WordOrderPuzzle,
   type WordOrderState,
 } from './wordOrder'
-import { accuracyBand, assistedAccuracy, nextInSequence, recommendGame } from './gameRules'
+import { accuracyBand, assistedAccuracy } from './gameRules'
 
 const PSALM = 'The LORD is my shepherd; I shall not want.'
 const JOHN = 'In the beginning was the Word, and the Word was with God, and the Word was God.'
@@ -198,16 +198,6 @@ function applyHintsUntilDone(p: WordOrderPuzzle, s: WordOrderState): WordOrderSt
 }
 
 describe('game rules', () => {
-  it('recommends a game by learning state (spec Screen 6)', () => {
-    expect(recommendGame('new')).toBe('missing-words')
-    expect(recommendGame('growing')).toBe('word-order')
-    expect(recommendGame('strong')).toBe('recall')
-  })
-  it('follows the learning sequence (spec §9.2)', () => {
-    expect(nextInSequence('missing-words')).toBe('word-order')
-    expect(nextInSequence('word-order')).toBe('recall')
-    expect(nextInSequence('recall')).toBeNull()
-  })
   it('calculates accuracy and bands', () => {
     expect(assistedAccuracy(3, 4)).toBe(0.75)
     expect(assistedAccuracy(0, 0)).toBe(0)

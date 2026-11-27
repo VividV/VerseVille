@@ -3,11 +3,13 @@ import type { DailyGoal, PlayerProfile, PlayerResources, TranslationCode } from 
 import { STARTING_RESOURCES } from '../engine/rewards/economy'
 import type { PlayerScripture } from '../types/scripture'
 import type { GameSession } from '../types/games'
+import { applyGameResult, type LearningUpdate } from '../engine/memorisation/learningEngine'
 import {
   loadGame,
   loadScriptureProgress,
   resetAllProgress,
-  saveGameSession,
+  loadGameSession,
+  saveCompletedGame,
   saveNewGame,
   saveProfile,
 } from '../services/persistence/saveService'
@@ -30,8 +32,8 @@ interface GameState {
   resources: PlayerResources | null
   /** Progress on each started scripture, keyed by scripture id. Empty until a scripture is learned. */
   scriptureProgress: Record<string, PlayerScripture>
-  /** The game just finished, shown on the completion screen. */
-  lastGameSession: GameSession | null
+  /** The game just finished and what it changed, shown on the completion screen. */
+  lastGame: CompletedGame | null
 
   /** Loads saved progress from the device. Call once at startup. */
   hydrate: () => Promise<void>
@@ -39,10 +41,19 @@ interface GameState {
   createGuestPlayer: (input: NewPlayerInput) => Promise<void>
   /** Renames the player. */
   updateDisplayName: (displayName: string) => Promise<void>
-  /** Saves a finished game to the device, then makes it the "last game" for the completion screen. */
-  recordGameSession: (session: GameSession) => Promise<void>
+  /**
+   * Applies a finished game to the scripture's progress (learning engine) and
+   * saves both. Safe to call twice with the same session: it is only applied once.
+   */
+  completeGame: (session: GameSession) => Promise<CompletedGame>
   /** Wipes all progress on this device. */
   resetProgress: () => Promise<void>
+}
+
+export interface CompletedGame {
+  session: GameSession
+  progressBefore: PlayerScripture | undefined
+  update: LearningUpdate
 }
 
 export const MAX_NAME_LENGTH = 24
@@ -58,7 +69,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
   profile: null,
   resources: null,
   scriptureProgress: {},
-  lastGameSession: null,
+  lastGame: null,
 
   hydrate: async () => {
     set({ status: 'loading', errorMessage: null })
@@ -101,14 +112,30 @@ export const useGameStore = create<GameState>()((set, get) => ({
     set({ profile })
   },
 
-  recordGameSession: async (session) => {
-    await saveGameSession(session)
-    set({ lastGameSession: session })
+  completeGame: async (session) => {
+    const last = get().lastGame
+    if (last?.session.id === session.id) return last
+    if (await loadGameSession(session.id)) throw new Error('This game has already been saved.')
+
+    const progressBefore = get().scriptureProgress[session.scriptureId]
+    const update = applyGameResult(progressBefore, {
+      scriptureId: session.scriptureId,
+      gameType: session.gameType,
+      accuracy: session.accuracy,
+      completedAt: new Date(session.completedAt),
+    })
+    await saveCompletedGame(session, update.progress)
+    const completed: CompletedGame = { session, progressBefore, update }
+    set({
+      scriptureProgress: { ...get().scriptureProgress, [session.scriptureId]: update.progress },
+      lastGame: completed,
+    })
+    return completed
   },
 
   resetProgress: async () => {
     await resetAllProgress()
     useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
-    set({ profile: null, resources: null, scriptureProgress: {}, lastGameSession: null })
+    set({ profile: null, resources: null, scriptureProgress: {}, lastGame: null })
   },
 }))

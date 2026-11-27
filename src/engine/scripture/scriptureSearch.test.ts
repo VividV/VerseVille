@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { PlayerScripture } from '../../types/scripture'
 import { getScriptureById, getScriptures } from './scriptureCatalog'
 import { matchesSearch, queryLibrary } from './scriptureSearch'
+import { createProgress } from '../memorisation/learningEngine'
 import { getScriptureStatus, isReviewDue, matchesLibraryFilter } from './scriptureStatus'
 
 const all = getScriptures('KJV')
@@ -10,16 +11,8 @@ const ids = (list: { id: string }[]) => list.map((s) => s.id)
 
 function progress(scriptureId: string, changes: Partial<PlayerScripture> = {}): PlayerScripture {
   return {
-    scriptureId,
-    status: 'learning',
-    masteryScore: 10,
-    learningStartedAt: '2026-11-20T10:00:00',
-    lastReviewedAt: null,
+    ...createProgress(scriptureId, new Date('2026-11-20T10:00:00')),
     nextReviewAt: '2026-11-30T10:00:00',
-    consecutiveSuccesses: 0,
-    totalAttempts: 1,
-    successfulAttempts: 1,
-    masteredAt: null,
     ...changes,
   }
 }

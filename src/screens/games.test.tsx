@@ -10,7 +10,7 @@ import { loadGameSession } from '../services/persistence/saveService'
 
 async function renderAsPlayer(path: string) {
   useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
-  useGameStore.setState({ status: 'loading', profile: null, resources: null, scriptureProgress: {}, lastGameSession: null })
+  useGameStore.setState({ status: 'loading', profile: null, resources: null, scriptureProgress: {}, lastGame: null })
   await useGameStore.getState().createGuestPlayer({ displayName: 'Grace', preferredTranslation: 'KJV', dailyGoal: 3 })
   const router = createTestRouter(path)
   render(
@@ -60,7 +60,7 @@ describe('game flow', () => {
     expect(screen.getByText(/0 of 2 right first time · 2 hints/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /continue: word order/i })).toBeInTheDocument()
 
-    const session = useGameStore.getState().lastGameSession!
+    const session = useGameStore.getState().lastGame!.session
     expect(await loadGameSession(session.id)).toMatchObject({ gameType: 'missing-words', scriptureId: 'psalm-23-1-kjv', score: 0 })
   })
 
@@ -98,7 +98,10 @@ describe('game flow', () => {
     expect(await screen.findByText('100%')).toBeInTheDocument()
     expect(screen.getByText('9 of 9 words correct')).toBeInTheDocument()
     expect(screen.getByText('The LORD is my shepherd; I shall not want.')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /learn another scripture/i })).toBeInTheDocument()
+    // Recall was played first, so the learning sequence continues with Missing Words.
+    expect(screen.getByRole('link', { name: /continue: missing words/i })).toBeInTheDocument()
+    expect(screen.getByText('+25 mastery')).toBeInTheDocument()
+    expect(screen.getByText('Tomorrow')).toBeInTheDocument()
   })
 
   it('Verse Recall: shows missing and wrong words', async () => {

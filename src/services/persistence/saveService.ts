@@ -59,9 +59,15 @@ export function saveScriptureProgress(progress: PlayerScripture): Promise<void> 
   return putRecord('scriptureProgress', progress.scriptureId, progress)
 }
 
-/** Saves a finished game. Sessions are kept by id, so saving the same session twice never duplicates it. */
-export function saveGameSession(session: GameSession): Promise<void> {
-  return putRecord('gameSessions', session.id, session)
+/**
+ * Saves a finished game and the scripture progress it produced in ONE transaction,
+ * so the two can never get out of step (e.g. if the browser closes mid-save).
+ */
+export function saveCompletedGame(session: GameSession, progress: PlayerScripture): Promise<void> {
+  return putRecordsAtomically([
+    { store: 'gameSessions', key: session.id, value: session },
+    { store: 'scriptureProgress', key: progress.scriptureId, value: progress },
+  ])
 }
 
 export function loadGameSession(id: string): Promise<GameSession | undefined> {

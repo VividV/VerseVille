@@ -6,7 +6,7 @@ import { ScriptureProgress } from '../components/scripture/ScriptureProgress'
 import { ScriptureText } from '../components/scripture/ScriptureText'
 import { MasteryBadge } from '../components/scripture/MasteryBadge'
 import { getRelatedScriptures, getScriptureById, getTopicById } from '../engine/scripture/scriptureCatalog'
-import { getScriptureStatus } from '../engine/scripture/scriptureStatus'
+import { getScriptureStatus, isReviewDue } from '../engine/scripture/scriptureStatus'
 import { useGameStore } from '../store/gameStore'
 
 export function ScriptureDetailScreen() {
@@ -40,6 +40,7 @@ export function ScriptureDetailScreen() {
 
   const progress = progressById[scripture.id]
   const isNew = getScriptureStatus(progress) === 'new'
+  const due = isReviewDue(progress, now)
   const related = getRelatedScriptures(scripture)
 
   return (
@@ -84,7 +85,7 @@ export function ScriptureDetailScreen() {
         to={`/scriptures/${scripture.id}/games`}
         className="inline-flex min-h-14 w-full items-center justify-center rounded-full bg-leaf px-6 text-lg font-bold text-white shadow-soft hover:bg-leaf-dark"
       >
-        {isNew ? 'Learn this scripture' : 'Review this scripture'}
+        {isNew ? 'Learn this scripture' : due ? 'Review now' : progress?.learnedAt ? 'Practise this scripture' : 'Continue learning'}
       </Link>
 
       {related.length > 0 && (

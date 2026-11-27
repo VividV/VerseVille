@@ -38,3 +38,8 @@ export function describeReviewDate(iso: string, now: Date = new Date()): string 
   if (days === 1) return 'Tomorrow'
   return `In ${days} days`
 }
+
+/** Midnight at the start of the local calendar day. */
+export function startOfLocalDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}

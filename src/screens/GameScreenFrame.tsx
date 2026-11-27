@@ -23,7 +23,7 @@ export function GameScreenFrame({
 }) {
   const { scriptureId = '' } = useParams()
   const navigate = useNavigate()
-  const recordGameSession = useGameStore((s) => s.recordGameSession)
+  const completeGame = useGameStore((s) => s.completeGame)
   const [startedAt] = useState(() => new Date())
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -53,7 +53,7 @@ export function GameScreenFrame({
     setError(null)
     try {
       const session = createGameSession({ scriptureId: scripture.id, gameType, accuracy, details, startedAt })
-      await recordGameSession(session) // saved before leaving the screen
+      await completeGame(session) // progress is saved before leaving the screen
       navigate('/game-complete', { replace: true })
     } catch {
       setError('We could not save this game. Please try again.')

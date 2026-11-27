@@ -1,6 +1,5 @@
 /** Shared game rules: recommendations, the learning sequence, accuracy and feedback. */
 import type { GameType } from '../../types/games'
-import type { ScriptureStatus } from '../../types/scripture'
 
 export const GAME_INFO: Record<GameType, { name: string; icon: string; description: string; path: string }> = {
   'missing-words': {
@@ -23,31 +22,10 @@ export const GAME_INFO: Record<GameType, { name: string; icon: string; descripti
   },
 }
 
-/** Learning order for a new scripture (spec §9.2). */
-export const LEARNING_SEQUENCE: GameType[] = ['missing-words', 'word-order', 'recall']
+export { LEARNING_SEQUENCE } from '../memorisation/learningEngine'
 
 export function gamePath(gameType: GameType, scriptureId: string): string {
   return `/games/${GAME_INFO[gameType].path}/${scriptureId}`
-}
-
-/** Recommended game for a scripture's learning state (spec Screen 6). */
-export function recommendGame(status: ScriptureStatus): GameType {
-  switch (status) {
-    case 'new':
-      return 'missing-words'
-    case 'learning':
-    case 'growing':
-      return 'word-order'
-    case 'strong':
-    case 'mastered':
-      return 'recall'
-  }
-}
-
-/** The next activity after finishing one, or null after Verse Recall. */
-export function nextInSequence(gameType: GameType): GameType | null {
-  const i = LEARNING_SEQUENCE.indexOf(gameType)
-  return LEARNING_SEQUENCE[i + 1] ?? null
 }
 
 /** Accuracy (0–1) for the assisted games: items right first time, without a hint. */

@@ -1,7 +1,9 @@
 import { Link, useParams } from 'react-router-dom'
 import { EmptyState } from '../components/common/EmptyState'
 import { MasteryBadge } from '../components/scripture/MasteryBadge'
-import { GAME_INFO, LEARNING_SEQUENCE, gamePath, recommendGame } from '../engine/games/gameRules'
+import { GAME_INFO, LEARNING_SEQUENCE, gamePath } from '../engine/games/gameRules'
+import { recommendGameFor } from '../engine/memorisation/reviewQueue'
+import { isDue } from '../engine/memorisation/scheduler'
 import { getScriptureById } from '../engine/scripture/scriptureCatalog'
 import { getScriptureStatus } from '../engine/scripture/scriptureStatus'
 import { useGameStore } from '../store/gameStore'
@@ -16,7 +18,8 @@ export function GameSelectionScreen() {
   }
 
   const status = getScriptureStatus(progress)
-  const recommended = recommendGame(status)
+  const recommended = recommendGameFor(progress)
+  const due = isDue(progress?.nextReviewAt ?? null, new Date())
 
   return (
     <div className="flex flex-col gap-4 animate-pop-in">
@@ -27,6 +30,11 @@ export function GameSelectionScreen() {
         <h1 className="text-2xl font-extrabold text-leaf-dark">Choose an activity</h1>
         <MasteryBadge status={status} />
       </header>
+      {due && (
+        <p className="rounded-2xl bg-gold/30 p-3 font-bold text-ink">
+          <span aria-hidden="true">💧</span> This verse is due for review today.
+        </p>
+      )}
       {status === 'new' && (
         <p className="text-ink-soft">
           New verses grow best step by step: fill in the missing words, put the words in order, then try it from memory.
