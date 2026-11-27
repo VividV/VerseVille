@@ -14,6 +14,7 @@ import { applyTransactions } from '../engine/rewards/economy'
 import { saveGardenChange } from '../services/persistence/saveService'
 import { createId } from '../utils/idUtils'
 import { useGameStore } from './gameStore'
+import { track } from '../services/analytics/analytics'
 
 export const PURCHASE_MESSAGES: Record<PurchaseProblem, string> = {
   'not-for-sale': "This item can't be bought.",
@@ -72,6 +73,7 @@ export const useGardenStore = create<GardenState>()((set, get) => ({
     })
     useGameStore.setState({ resources: newResources, rewardTransactions: [...rewardTransactions, transaction] })
     set({ inventory })
+    void track('garden_item_purchased', { itemId })
   },
 
   placeItem: async (itemId, x, y) => {
@@ -90,6 +92,7 @@ export const useGardenStore = create<GardenState>()((set, get) => ({
     const inventory = addToInventory(get().inventory, itemId, -1)
     await saveGardenChange({ putItems: [placed], inventory: { [itemId]: inventory[itemId] ?? 0 } })
     set({ items: [...get().items, placed], inventory })
+    void track('garden_item_placed', { itemId })
     return placed
   },
 

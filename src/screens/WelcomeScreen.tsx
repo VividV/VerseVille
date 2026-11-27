@@ -6,7 +6,7 @@ export function WelcomeScreen() {
   const navigate = useNavigate()
 
   return (
-    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-paper">
+    <main className="relative flex min-h-dvh flex-col overflow-hidden bg-paper">
       <GardenBackdrop fill className="absolute inset-x-0 top-0 h-[66dvh] w-full" />
       <div className="relative mt-auto mx-auto w-full max-w-md px-6 pb-[calc(2rem+env(safe-area-inset-bottom))]">
         <div className="rounded-3xl bg-cream/95 p-6 text-center shadow-soft animate-pop-in">
@@ -26,6 +26,6 @@ export function WelcomeScreen() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

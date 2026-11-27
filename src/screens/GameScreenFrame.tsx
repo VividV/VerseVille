@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
+import { track } from '../services/analytics/analytics'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { EmptyState } from '../components/common/EmptyState'
 import { GameHeader } from '../components/games/GameHeader'
@@ -29,6 +30,10 @@ export function GameScreenFrame({
   const [error, setError] = useState<string | null>(null)
   const scripture = getScriptureById(scriptureId)
   const info = GAME_INFO[gameType]
+
+  useEffect(() => {
+    if (scripture) void track('game_started', { scriptureId: scripture.id, gameType })
+  }, [scripture, gameType])
 
   if (!scripture) {
     return (

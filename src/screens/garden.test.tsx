@@ -39,7 +39,7 @@ describe('garden screens', () => {
     // Decorations tab is default; the first item is the Flower Bed (20 coins, 1 seed).
     await user.click((await screen.findAllByRole('button', { name: 'Buy' }))[0])
     expect(await screen.findByText(/bought!/)).toBeInTheDocument()
-    expect(screen.getByLabelText('80 coins')).toBeInTheDocument()
+    expect(screen.getByText('80 coins')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Place' }))
     expect(router.state.location.pathname).toBe('/garden')
 
@@ -56,7 +56,7 @@ describe('garden screens', () => {
   it('shows land requirements when tapping locked land', async () => {
     const user = userEvent.setup()
     await renderAsPlayer('/garden')
-    await user.click(await screen.findByRole('button', { name: /locked land: meadow/i }))
+    await user.click(await screen.findByRole('button', { name: /meadow · tap to unlock/i }))
     expect(screen.getByRole('dialog', { name: 'Unlock the Meadow' })).toBeInTheDocument()
     expect(screen.getByText('Reach level 3')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Keep growing to unlock' })).toBeDisabled()

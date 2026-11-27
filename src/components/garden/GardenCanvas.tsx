@@ -19,6 +19,9 @@ export interface GardenCanvasProps {
   onLockedTap: () => void
 }
 
+/** Items that sway gently in the breeze. */
+const SWAYING = new Set(['scripture_tree', 'sunflower', 'lavender', 'olive_tree', 'fig_tree', 'rose_bush'])
+
 const cell = (x: number, y: number, w = 1, h = 1) => ({
   gridColumn: `${x + 1} / span ${w}`,
   gridRow: `${y + 1} / span ${h}`,
@@ -104,7 +107,12 @@ export function GardenCanvas({ items, expansionsUnlocked, mode, justPlacedId, on
               item.id === justPlacedId ? 'animate-pop-in' : '',
             ].join(' ')}
           >
-            <ItemArt art={def.art} width={def.width} height={def.height} className="h-full w-full" />
+            <ItemArt
+              art={def.art}
+              width={def.width}
+              height={def.height}
+              className={`h-full w-full ${SWAYING.has(def.id) ? 'sway-gently' : ''}`}
+            />
           </button>
         )
       })}
@@ -134,7 +142,7 @@ export function GardenCanvas({ items, expansionsUnlocked, mode, justPlacedId, on
           disabled={placing}
           style={{ gridColumn: `1 / span ${GRID_COLUMNS}`, gridRow: `${unlockedRows + 1} / span ${lockedRows}` }}
           className="relative z-10 flex flex-col items-center justify-center gap-1 bg-[repeating-linear-gradient(45deg,#7d9b76_0_14px,#76946f_14px_28px)] text-white"
-          aria-label={`Locked land: ${upcoming.name}. Show how to unlock it.`}
+          aria-label={`${upcoming.name} · tap to unlock (locked land)`}
         >
           <span className="relative text-3xl" aria-hidden="true">
             🔒

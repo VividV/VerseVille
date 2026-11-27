@@ -29,7 +29,7 @@ describe('game flow', () => {
     const router = await renderAsPlayer('/scriptures/psalm-23-1-kjv')
     await user.click(await screen.findByRole('link', { name: 'Learn this scripture' }))
     expect(router.state.location.pathname).toBe('/scriptures/psalm-23-1-kjv/games')
-    const recommended = screen.getByText('Recommended').closest('a')!
+    const recommended = (await screen.findByText('Recommended')).closest('a')!
     expect(recommended).toHaveTextContent('Missing Words')
     await user.click(recommended)
     expect(router.state.location.pathname).toBe('/games/missing-words/psalm-23-1-kjv')

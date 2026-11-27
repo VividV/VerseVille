@@ -18,6 +18,8 @@ import type { PlacedGardenItem } from '../types/garden'
 import { nextActivityPath } from './nextActivity'
 import { todayKey, useQuestStore } from '../store/questStore'
 import { canClaim } from '../engine/quests/questEngine'
+import { playSound } from '../services/audio/soundService'
+import { Celebration } from '../components/common/Celebration'
 
 const REASON_TEXT = {
   review: 'Due for review',
@@ -42,6 +44,7 @@ export function GardenScreen() {
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
   const [justPlacedId, setJustPlacedId] = useState<string | null>(null)
+  const [celebrateLand, setCelebrateLand] = useState(false)
 
   const now = new Date()
   const dueCount = getDueReviews(progressById, now).length
@@ -85,10 +88,12 @@ export function GardenScreen() {
     try {
       if (mode.movingId) {
         await moveItem(mode.movingId, mode.target.x, mode.target.y)
+        playSound('place')
         setJustPlacedId(mode.movingId)
         setNotice(`${mode.def.name} moved.`)
       } else {
         const placed = await placeItem(mode.def.id, mode.target.x, mode.target.y)
+        playSound('place')
         setJustPlacedId(placed.id)
         setNotice(`${mode.def.name} placed in your garden!`)
       }
@@ -220,7 +225,7 @@ export function GardenScreen() {
               >
                 <span className="flex flex-col leading-tight">
                   <span className="text-lg font-extrabold">Continue Learning</span>
-                  <span className="text-sm text-white/90">
+                  <span className="text-sm text-white">
                     {REASON_TEXT[next.reason]}: {next.scripture.reference}
                   </span>
                 </span>
@@ -249,11 +254,14 @@ export function GardenScreen() {
         }}
       />
 
+      {celebrateLand && <Celebration />}
       {showExpansion && upcoming && resources && (
         <ExpansionModal
           check={checkExpansion(upcoming, { level: resources.level, masteredCount: masteredCount(), coins: resources.coins })}
           onUnlock={async () => {
             await unlockExpansion()
+            playSound('levelUp')
+            setCelebrateLand(true)
             setNotice(`The ${upcoming.name} is yours! New land to grow.`)
           }}
           onClose={() => setShowExpansion(false)}

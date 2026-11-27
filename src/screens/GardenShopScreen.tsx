@@ -7,6 +7,7 @@ import { checkPurchase, ownedCount } from '../engine/garden/shop'
 import { useGameStore } from '../store/gameStore'
 import { PURCHASE_MESSAGES, useGardenStore } from '../store/gardenStore'
 import type { ItemCategory } from '../types/garden'
+import { playSound } from '../services/audio/soundService'
 
 export function GardenShopScreen() {
   const navigate = useNavigate()
@@ -23,6 +24,7 @@ export function GardenShopScreen() {
     setBusyId(itemId)
     try {
       await buyItem(itemId)
+      playSound('reward')
       setMessage(`${name} bought! Tap "Place" to put it in your garden.`)
     } catch (e) {
       setMessage(e instanceof Error ? e.message : 'Could not buy that.')
@@ -68,8 +70,8 @@ export function GardenShopScreen() {
           const check = checkPurchase({ item, level: resources.level, resources, owned })
           const lockedByLevel = !check.ok && check.reason === 'level'
           return (
-            <li key={item.id} className={`flex gap-3 rounded-card bg-cream p-3 shadow-soft ${lockedByLevel ? 'opacity-70' : ''}`}>
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#8FC184]/60 p-1">
+            <li key={item.id} className="flex gap-3 rounded-card bg-cream p-3 shadow-soft">
+              <div className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#8FC184]/60 p-1 ${lockedByLevel ? 'opacity-50 grayscale' : ''}`}>
                 <ItemArt art={item.art} width={item.width} height={item.height} className="h-full w-full" />
               </div>
               <div className="flex min-w-0 flex-1 flex-col gap-1">

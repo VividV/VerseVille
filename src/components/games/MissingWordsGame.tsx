@@ -13,6 +13,7 @@ import {
 import { assistedAccuracy } from '../../engine/games/gameRules'
 import { Button } from '../common/Button'
 import { WordTileButton } from './WordTileButton'
+import { playSound } from '../../services/audio/soundService'
 
 export interface GameFinish {
   accuracy: number
@@ -42,10 +43,12 @@ export function MissingWordsGame({
     const { state: next, result } = placeTile(puzzle, state, tileId)
     setState(next)
     if (result === 'wrong') {
+      playSound('wrong')
       setShakeTileId(null)
       requestAnimationFrame(() => setShakeTileId(tileId))
       setMessage('Not quite — try another word.')
     } else if (result === 'correct') {
+      playSound(isMissingWordsComplete(puzzle, next) ? 'complete' : 'correct')
       setMessage(isMissingWordsComplete(puzzle, next) ? 'Every blank is filled. Well done!' : 'Yes! Next blank.')
     }
   }

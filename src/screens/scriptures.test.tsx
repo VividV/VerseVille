@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterProvider } from 'react-router-dom'
 import { AppProviders } from '../app/providers'
@@ -55,17 +55,19 @@ describe('Scripture library screen', () => {
     await user.click(await screen.findByRole('link', { name: /psalm 23:1/i }))
     expect(router.state.location.pathname).toBe('/scriptures/psalm-23-1-kjv')
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Psalm 23:1' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Psalm 23:1' })).toBeInTheDocument()
     expect(screen.getByText('The LORD is my shepherd; I shall not want.')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /what it means/i })).toBeInTheDocument()
     expect(screen.getByText("You haven't started this scripture yet.")).toBeInTheDocument()
 
     await user.click(screen.getByRole('link', { name: /john 10:11/i }))
     expect(router.state.location.pathname).toBe('/scriptures/john-10-11-kjv')
+    await screen.findByRole('heading', { level: 1, name: 'John 10:11' })
 
     await user.click(screen.getByRole('button', { name: 'Back' }))
+    await screen.findByRole('heading', { level: 1, name: 'Psalm 23:1' })
     await user.click(screen.getByRole('button', { name: 'Back' }))
-    expect(router.state.location.pathname).toBe('/scriptures')
+    await waitFor(() => expect(router.state.location.pathname).toBe('/scriptures'))
     expect(router.state.location.search).toBe('?q=shepherd')
   })
 

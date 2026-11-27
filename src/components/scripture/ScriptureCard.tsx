@@ -23,7 +23,7 @@ export function ScriptureCard({ scripture, progress, now }: ScriptureCardProps) 
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="text-lg font-extrabold text-leaf-dark">{scripture.reference}</h3>
+          <h2 className="text-lg font-extrabold text-leaf-dark">{scripture.reference}</h2>
           <p className="truncate text-sm font-semibold text-ink-soft">{topics}</p>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">

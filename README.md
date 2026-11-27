@@ -17,8 +17,8 @@ Built in phases, following the product specification.
 | 5 | Reward engine (XP, coins, seeds, levels) | ✅ Done |
 | 6 | Interactive garden | ✅ Done |
 | 7 | Quests, collection, progress | ✅ Done |
-| 8 | Accounts & cloud sync (Supabase) | Next |
-| 9 | Polish & testing | — |
+| 8 | Accounts & cloud sync (Supabase) | Not started — needs a Supabase project |
+| 9 | Polish & testing | ✅ Done |
 
 ## Running it
 
@@ -32,6 +32,18 @@ npm run build      # type-check and build for production (output in dist/)
 ```
 
 To try it on an Android phone on the same Wi-Fi: `npm run dev -- --host`, then open the "Network" address it prints.
+
+To try the real, installable version locally: `npm run build && npm run preview`.
+
+## Putting it online (Vercel) and installing on Android
+
+1. Push this repository to GitHub, then in Vercel choose **Add New → Project** and import it. `vercel.json` already
+   sets the build command, output folder, page routing and caching. No environment variables are needed.
+2. Open the site on an Android phone in Chrome → menu → **Install app** (or **Add to Home screen**).
+3. After the first visit VerseVille works **offline**: the service worker (`public/sw.js`) saves every app file.
+   Progress is saved on the phone in IndexedDB, and the app asks the browser to keep that data even when space is low.
+
+Installing needs HTTPS, which Vercel provides. When you release changes, users get them on their next visit.
 
 ## How the code is organised
 
@@ -140,3 +152,20 @@ repeat of the same id makes the database refuse the whole save. Rewards can't be
   shows "Needs a review". Filters: topic, mastery level, recently mastered.
 - **My Progress** (Profile → My Progress): headline is *verses you can recall* (Strong + Mastered) and 30-day recall
   accuracy, then learned, mastered, reviews, streak, level and garden stage.
+
+## Polish, accessibility and testing (Phase 9)
+
+- **Sound** (Profile → Sound effects): soft chimes made with the Web Audio API — no audio files.
+- **Animation**: confetti for level-ups, mastered verses, daily goals and new land; swaying trees; resource bumps.
+  Everything turns off with Profile → Reduce motion or the phone's own reduce-motion setting.
+- **Accessibility**: every screen passes an automated axe-core check (0 violations). The spec's primary green
+  `#5D9868` was deepened to `#477D52` so white text on buttons meets WCAG AA contrast (4.86:1); the original is kept
+  as `--color-leaf-soft`. Adjustable text size, high contrast, screen-reader labels, keyboard support and non-drag
+  alternatives for Word Order were built in earlier phases.
+- **Speed**: screens load as they're opened; the first screen needs ~134 KB (compressed) of JavaScript.
+- **Errors**: any crash shows a friendly screen with a reload button (progress is safe).
+- **Learning analytics** (spec §18): events like `game_completed` and `recall_accuracy` are recorded **on the device
+  only** (`src/services/analytics/analytics.ts`), with ids and numbers but nothing personal, ready to sync later.
+- **Tests**: `npm test` runs 180+ automated tests, including `src/test/definitionOfDone.test.tsx`, which plays the
+  whole spec §21 checklist through the real screens: onboarding, learning a verse with all three games, earning,
+  building, closing the app and coming back the next day for a review.

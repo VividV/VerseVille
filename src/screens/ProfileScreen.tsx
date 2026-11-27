@@ -135,14 +135,14 @@ export function ProfileScreen() {
         <Toggle
           id="sound"
           label="Sound effects"
-          description="Saved for later. Sound effects are added in a later update."
+          description="Gentle chimes for answers, rewards and your garden."
           checked={settings.soundEnabled}
           onChange={(soundEnabled) => updateSettings({ soundEnabled })}
         />
         <Toggle
           id="notifications"
           label="Reminders"
-          description="Saved for later. VerseVille does not send notifications yet."
+          description="Saved for later. VerseVille doesn't send notifications in this version."
           checked={settings.notificationsEnabled}
           onChange={(notificationsEnabled) => updateSettings({ notificationsEnabled })}
         />
@@ -175,7 +175,7 @@ export function ProfileScreen() {
         <Toggle
           id="motion"
           label="Reduce motion"
-          description="Turns off swaying trees and other animations."
+          description="Turns off swaying trees, confetti and other animations."
           checked={settings.reducedMotion}
           onChange={(reducedMotion) => updateSettings({ reducedMotion })}
         />

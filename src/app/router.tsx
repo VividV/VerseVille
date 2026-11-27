@@ -1,22 +1,26 @@
 import { Navigate, Outlet, createBrowserRouter, createMemoryRouter, type RouteObject } from 'react-router-dom'
 import { AppShell } from '../components/layout/AppShell'
 import { useGameStore } from '../store/gameStore'
+import { lazy, Suspense, type ComponentType } from 'react'
+import { LoadingState } from '../components/common/LoadingState'
 import { WelcomeScreen } from '../screens/WelcomeScreen'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { GardenScreen } from '../screens/GardenScreen'
-import { ProfileScreen } from '../screens/ProfileScreen'
-import { ScriptureLibraryScreen } from '../screens/ScriptureLibraryScreen'
-import { ScriptureDetailScreen } from '../screens/ScriptureDetailScreen'
-import { GameSelectionScreen } from '../screens/GameSelectionScreen'
-import { MissingWordsScreen } from '../screens/MissingWordsScreen'
-import { WordOrderScreen } from '../screens/WordOrderScreen'
-import { VerseRecallScreen } from '../screens/VerseRecallScreen'
-import { GameCompletionScreen } from '../screens/GameCompletionScreen'
-import { GardenShopScreen } from '../screens/GardenShopScreen'
-import { DailyQuestsScreen } from '../screens/DailyQuestsScreen'
-import { CollectionScreen } from '../screens/CollectionScreen'
-import { ProgressScreen } from '../screens/ProgressScreen'
 import { NotFoundScreen } from '../screens/NotFoundScreen'
+import { RouteErrorScreen } from '../screens/RouteErrorScreen'
+
+/**
+ * Screens other than Welcome, Onboarding and Garden are loaded when first
+ * opened, so the app starts quickly on a phone.
+ */
+function lazyScreen<K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) {
+  const Screen = lazy(async () => ({ default: (await load())[name] as ComponentType }))
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <Screen />
+    </Suspense>
+  )
+}
 
 /** Only players who have finished onboarding can see the game screens. */
 function RequirePlayer() {
@@ -30,7 +34,7 @@ function RequireNoPlayer() {
   return profile ? <Navigate to="/garden" replace /> : <Outlet />
 }
 
-export const routes: RouteObject[] = [
+const appRoutes: RouteObject[] = [
   { path: '/', element: <Navigate to="/garden" replace /> },
   {
     element: <RequireNoPlayer />,
@@ -43,28 +47,31 @@ export const routes: RouteObject[] = [
     element: <RequirePlayer />,
     children: [
       // Games are full-screen (no tab bar) so players can focus.
-      { path: '/games/missing-words/:scriptureId', element: <MissingWordsScreen /> },
-      { path: '/games/word-order/:scriptureId', element: <WordOrderScreen /> },
-      { path: '/games/recall/:scriptureId', element: <VerseRecallScreen /> },
-      { path: '/game-complete', element: <GameCompletionScreen /> },
+      { path: '/games/missing-words/:scriptureId', element: lazyScreen(() => import('../screens/MissingWordsScreen'), 'MissingWordsScreen') },
+      { path: '/games/word-order/:scriptureId', element: lazyScreen(() => import('../screens/WordOrderScreen'), 'WordOrderScreen') },
+      { path: '/games/recall/:scriptureId', element: lazyScreen(() => import('../screens/VerseRecallScreen'), 'VerseRecallScreen') },
+      { path: '/game-complete', element: lazyScreen(() => import('../screens/GameCompletionScreen'), 'GameCompletionScreen') },
       {
         element: <AppShell />,
         children: [
           { path: '/garden', element: <GardenScreen /> },
-          { path: '/scriptures', element: <ScriptureLibraryScreen /> },
-          { path: '/scriptures/:scriptureId', element: <ScriptureDetailScreen /> },
-          { path: '/scriptures/:scriptureId/games', element: <GameSelectionScreen /> },
-          { path: '/quests', element: <DailyQuestsScreen /> },
-          { path: '/collection', element: <CollectionScreen /> },
-          { path: '/progress', element: <ProgressScreen /> },
-          { path: '/shop', element: <GardenShopScreen /> },
-          { path: '/profile', element: <ProfileScreen /> },
+          { path: '/scriptures', element: lazyScreen(() => import('../screens/ScriptureLibraryScreen'), 'ScriptureLibraryScreen') },
+          { path: '/scriptures/:scriptureId', element: lazyScreen(() => import('../screens/ScriptureDetailScreen'), 'ScriptureDetailScreen') },
+          { path: '/scriptures/:scriptureId/games', element: lazyScreen(() => import('../screens/GameSelectionScreen'), 'GameSelectionScreen') },
+          { path: '/quests', element: lazyScreen(() => import('../screens/DailyQuestsScreen'), 'DailyQuestsScreen') },
+          { path: '/collection', element: lazyScreen(() => import('../screens/CollectionScreen'), 'CollectionScreen') },
+          { path: '/progress', element: lazyScreen(() => import('../screens/ProgressScreen'), 'ProgressScreen') },
+          { path: '/shop', element: lazyScreen(() => import('../screens/GardenShopScreen'), 'GardenShopScreen') },
+          { path: '/profile', element: lazyScreen(() => import('../screens/ProfileScreen'), 'ProfileScreen') },
         ],
       },
     ],
   },
   { path: '*', element: <NotFoundScreen /> },
 ]
+
+/** One parent route so any screen error shows the friendly error screen. */
+export const routes: RouteObject[] = [{ element: <Outlet />, errorElement: <RouteErrorScreen />, children: appRoutes }]
 
 export function createAppRouter() {
   return createBrowserRouter(routes)

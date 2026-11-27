@@ -38,6 +38,7 @@ import {
 import { REWARD_CONFIG } from '../engine/rewards/rewardCalculator'
 import type { DailyQuest, DayRecord } from '../types/quests'
 import { toLocalDateKey } from '../utils/dateUtils'
+import { track } from '../services/analytics/analytics'
 
 export type LoadStatus = 'loading' | 'ready' | 'error'
 
@@ -87,6 +88,19 @@ export interface CompletedGame {
   /** The day's record after this game (daily goal progress). */
   day: DayRecord
   dailyGoalJustCompleted: boolean
+}
+
+/** Learning analytics for a finished game (ids and numbers only). */
+function trackGame(game: CompletedGame) {
+  const { session, update } = game
+  const base = { scriptureId: session.scriptureId }
+  void track('game_completed', { ...base, gameType: session.gameType, accuracy: session.accuracy, durationSeconds: session.durationSeconds })
+  if (session.gameType === 'recall') void track('recall_accuracy', { ...base, accuracy: session.accuracy })
+  if (update.events.scriptureStarted) void track('scripture_started', base)
+  if (update.events.scriptureLearned) void track('scripture_learned', base)
+  if (update.events.reviewCompleted) void track('review_completed', { ...base, accuracy: session.accuracy })
+  if (update.events.scriptureMastered) void track('scripture_mastered', base)
+  if (game.dailyGoalJustCompleted) void track('daily_goal_completed', { goal: useSettingsStore.getState().settings.dailyGoal })
 }
 
 export const MAX_NAME_LENGTH = 24
@@ -155,6 +169,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
     useQuestStore.setState({ quests: [], days: {} })
     set({ profile, resources, scriptureProgress: {}, rewardTransactions: [] })
     await useQuestStore.getState().ensureQuestsFor(toLocalDateKey(new Date()))
+    void track('onboarding_completed', { dailyGoal, translation: preferredTranslation })
   },
 
   updateDisplayName: async (displayName) => {
@@ -245,6 +260,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
       resources,
       lastGame: completed,
     })
+    trackGame(completed)
     return completed
   },
 

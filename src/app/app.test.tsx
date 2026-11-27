@@ -42,9 +42,9 @@ describe('app navigation', () => {
     const router = renderApp('/welcome')
     await onboard(user)
 
-    expect(screen.getByLabelText('100 coins')).toBeInTheDocument()
-    expect(screen.getByLabelText('5 seeds')).toBeInTheDocument()
-    expect(screen.getByLabelText('Level 1')).toBeInTheDocument()
+    expect(screen.getByText('100 coins')).toBeInTheDocument()
+    expect(screen.getByText('5 seeds')).toBeInTheDocument()
+    expect(screen.getByText('Level 1')).toBeInTheDocument()
 
     await user.click(within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Scriptures' }))
     expect(router.state.location.pathname).toBe('/scriptures')

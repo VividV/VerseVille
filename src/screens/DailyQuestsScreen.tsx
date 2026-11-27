@@ -6,6 +6,7 @@ import { QuestProgress } from '../components/quests/QuestProgress'
 import { DAILY_GOAL_SEEDS, canClaim } from '../engine/quests/questEngine'
 import { todayKey, useQuestStore } from '../store/questStore'
 import { useSettingsStore } from '../store/settingsStore'
+import { playSound } from '../services/audio/soundService'
 
 export function DailyQuestsScreen() {
   const { quests, days, ensureQuestsFor, claimQuest } = useQuestStore()
@@ -29,6 +30,7 @@ export function DailyQuestsScreen() {
     setBusyId(id)
     try {
       await claimQuest(id)
+      playSound('reward')
       setMessage('Reward claimed! Keep growing.')
     } catch (e) {
       setMessage(e instanceof Error ? e.message : 'Could not claim that.')

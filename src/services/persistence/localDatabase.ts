@@ -8,7 +8,7 @@
  */
 
 export const DB_NAME = 'verseville'
-export const DB_VERSION = 3 // v2: added "garden"; v3: added "days"
+export const DB_VERSION = 4 // v2: added "garden"; v3: added "days"; v4: added "analytics"
 
 export const STORES = [
   'profile',
@@ -22,6 +22,7 @@ export const STORES = [
   'rewardTransactions',
   'garden',
   'days',
+  'analytics',
 ] as const
 
 export type StoreName = (typeof STORES)[number]

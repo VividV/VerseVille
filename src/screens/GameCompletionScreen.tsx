@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Celebration } from '../components/common/Celebration'
+import { playSound } from '../services/audio/soundService'
 import { Link, Navigate } from 'react-router-dom'
 import { RewardSummary } from '../components/games/RewardSummary'
 import { LevelUpModal } from '../components/games/LevelUpModal'
@@ -21,6 +23,17 @@ export function GameCompletionScreen() {
   const dailyGoal = useSettingsStore((s) => s.settings.dailyGoal)
   const scripture = game ? getScriptureById(game.session.scriptureId) : undefined
   const [levelUpSeenFor, setLevelUpSeenFor] = useState<string | null>(null)
+  const sessionId = game?.session.id
+
+  // One sound per finished game: level up beats mastery beats rewards beats a plain finish.
+  useEffect(() => {
+    if (!game) return
+    if (game.levelAfter > game.levelBefore) playSound('levelUp')
+    else if (game.update.events.scriptureMastered || game.dailyGoalJustCompleted) playSound('complete')
+    else if (game.rewards.length > 0) playSound('reward')
+    else playSound('tap')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId])
 
   // Nothing to show (e.g. the page was refreshed): go home. Progress was already saved.
   if (!game || !scripture) return <Navigate to="/garden" replace />
@@ -59,6 +72,9 @@ export function GameCompletionScreen() {
           </Link>
         </nav>
       </main>
+      {(game.levelAfter > game.levelBefore || game.update.events.scriptureMastered || game.dailyGoalJustCompleted) && (
+        <Celebration key={session.id} />
+      )}
       <LevelUpModal
         level={game.levelAfter}
         open={game.levelAfter > game.levelBefore && levelUpSeenFor !== session.id}

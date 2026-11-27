@@ -21,6 +21,7 @@ import { Button } from '../common/Button'
 import { WordTileButton } from './WordTileButton'
 import { useTileDrag, type DropInfo } from './useTileDrag'
 import type { GameFinish } from './MissingWordsGame'
+import { playSound } from '../../services/audio/soundService'
 
 export function WordOrderGame({ scripture, onFinish }: { scripture: Scripture; onFinish: (result: GameFinish) => void }) {
   const [puzzle] = useState(() => createWordOrderPuzzle(scripture.text, Math.random))
@@ -30,7 +31,14 @@ export function WordOrderGame({ scripture, onFinish }: { scripture: Scripture; o
   /** Every change goes through here: a full answer line is checked automatically. */
   const update = (next: WordOrderState) => {
     const changed = next.answer !== state.answer
-    setState(changed && isAnswerFull(puzzle, next) ? checkWordOrder(puzzle, next) : next)
+    if (changed && isAnswerFull(puzzle, next)) {
+      const checked = checkWordOrder(puzzle, next)
+      playSound(isWordOrderSolved(puzzle, checked) ? 'complete' : 'wrong')
+      setState(checked)
+    } else {
+      if (changed) playSound('tap')
+      setState(next)
+    }
   }
 
   const { ghost, startDrag, tap } = useTileDrag((drop: DropInfo) => {

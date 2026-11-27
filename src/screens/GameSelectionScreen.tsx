@@ -61,7 +61,7 @@ export function GameSelectionScreen() {
                   <span className="block text-lg font-extrabold">
                     {i + 1}. {info.name}
                   </span>
-                  <span className={`block text-sm ${isRecommended ? 'text-white/90' : 'text-ink-soft'}`}>
+                  <span className={`block text-sm ${isRecommended ? 'text-white' : 'text-ink-soft'}`}>
                     {info.description}
                   </span>
                 </span>
