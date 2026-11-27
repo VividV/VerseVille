@@ -455,7 +455,7 @@ returns jsonb language plpgsql security invoker set search_path = '' as $$
 declare t jsonb; accepted text[] := '{}'; rejected jsonb := '[]';
 begin
   if auth.uid() is null then raise exception 'not signed in'; end if;
-  perform public.vv_ensure_player(auth.uid());
+  -- (The validation trigger creates the player's resource row if needed.)
   for t in select * from jsonb_array_elements(p_transactions) order by (value->>'created_at') loop
     begin
       insert into public.reward_transactions
