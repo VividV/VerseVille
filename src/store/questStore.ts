@@ -11,6 +11,7 @@ import { applyTransactions } from '../engine/rewards/economy'
 import { saveQuestClaim, saveQuests } from '../services/persistence/saveService'
 import { toLocalDateKey } from '../utils/dateUtils'
 import { useGameStore } from './gameStore'
+import { exclusive } from '../services/sync/lock'
 
 interface QuestState {
   /** Every saved quest (all days), so unclaimed rewards from earlier days aren't lost. */
@@ -36,7 +37,7 @@ export const useQuestStore = create<QuestState>()((set, get) => ({
   quests: [],
   days: {},
 
-  ensureQuestsFor: async (date) => {
+  ensureQuestsFor: (date) => exclusive(async () => {
     const existing = questsForDate(get().quests, date)
     if (existing.length > 0) return existing
     const created = buildQuestsFor(date)
@@ -44,9 +45,9 @@ export const useQuestStore = create<QuestState>()((set, get) => ({
     // Another call may have created them meanwhile; keep only one set per day.
     if (questsForDate(get().quests, date).length === 0) set({ quests: [...get().quests, ...created] })
     return questsForDate(get().quests, date)
-  },
+  }),
 
-  claimQuest: async (questInstanceId) => {
+  claimQuest: (questInstanceId) => exclusive(async () => {
     const quest = get().quests.find((q) => q.id === questInstanceId)
     if (!quest) throw new Error('Quest not found.')
     if (!canClaim(quest)) throw new Error(quest.rewardClaimed ? 'Already claimed.' : 'This quest is not complete yet.')
@@ -60,7 +61,7 @@ export const useQuestStore = create<QuestState>()((set, get) => ({
     await saveQuestClaim(claimed, transaction, newResources)
     useGameStore.setState({ resources: newResources, rewardTransactions: [...rewardTransactions, transaction] })
     set({ quests: get().quests.map((q) => (q.id === claimed.id ? claimed : q)) })
-  },
+  }),
 }))
 
 export function todayKey(now: Date = new Date()): string {

@@ -7,6 +7,8 @@ import { MAX_NAME_LENGTH, useGameStore } from '../store/gameStore'
 import { useSettingsStore } from '../store/settingsStore'
 import type { TextSize } from '../types/player'
 import { DailyGoalPicker, TranslationPicker } from './settingsFields'
+import { AccountCard } from '../components/layout/AccountCard'
+import { useAccountStore } from '../store/accountStore'
 
 function Toggle({
   id,
@@ -55,7 +57,9 @@ export function ProfileScreen() {
   const navigate = useNavigate()
   const profile = useGameStore((s) => s.profile)
   const updateDisplayName = useGameStore((s) => s.updateDisplayName)
-  const resetProgress = useGameStore((s) => s.resetProgress)
+  const resetEverything = useAccountStore((s) => s.resetEverything)
+  const signedIn = useAccountStore((s) => s.user !== null)
+  const [resetError, setResetError] = useState<string | null>(null)
   const settings = useSettingsStore((s) => s.settings)
   const updateSettings = useSettingsStore((s) => s.updateSettings)
 
@@ -75,8 +79,14 @@ export function ProfileScreen() {
 
   const doReset = async () => {
     setResetting(true)
-    await resetProgress()
-    navigate('/welcome', { replace: true })
+    setResetError(null)
+    try {
+      await resetEverything()
+      navigate('/welcome', { replace: true })
+    } catch {
+      setResetError("Couldn't reach your account to reset it. Please check your connection and try again.")
+      setResetting(false)
+    }
   }
 
   return (
@@ -181,17 +191,13 @@ export function ProfileScreen() {
         />
       </Card>
 
-      <Card>
-        <h2 className="text-lg font-bold text-leaf-dark">Account &amp; privacy</h2>
-        <p className="mt-1 text-ink-soft">
-          You're playing as a guest. Your progress is saved only on this device and is not sent anywhere. Optional
-          accounts for saving across devices are planned for a later update.
-        </p>
-      </Card>
+      <AccountCard />
 
       <Card>
         <h2 className="text-lg font-bold text-leaf-dark">Reset progress</h2>
-        <p className="mt-1 mb-3 text-ink-soft">Erase your garden, resources and scripture progress on this device.</p>
+        <p className="mt-1 mb-3 text-ink-soft">
+          Erase your garden, resources and scripture progress{signedIn ? ' everywhere' : ' on this device'}.
+        </p>
         <Button variant="danger" fullWidth onClick={() => setConfirmReset(true)}>
           Reset progress
         </Button>
@@ -212,7 +218,14 @@ export function ProfileScreen() {
           </>
         }
       >
-        This permanently deletes your profile, garden and scripture progress from this device. It can't be undone.
+        {signedIn
+          ? "This permanently deletes your profile, garden and scripture progress from your account and this device. It can't be undone."
+          : "This permanently deletes your profile, garden and scripture progress from this device. It can't be undone."}
+        {resetError && (
+          <p role="alert" className="mt-2 font-bold text-[#b64b3c]">
+            {resetError}
+          </p>
+        )}
       </Modal>
     </div>
   )

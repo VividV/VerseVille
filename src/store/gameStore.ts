@@ -39,6 +39,7 @@ import { REWARD_CONFIG } from '../engine/rewards/rewardCalculator'
 import type { DailyQuest, DayRecord } from '../types/quests'
 import { toLocalDateKey } from '../utils/dateUtils'
 import { track } from '../services/analytics/analytics'
+import { exclusive } from '../services/sync/lock'
 
 export type LoadStatus = 'loading' | 'ready' | 'error'
 
@@ -62,6 +63,8 @@ interface GameState {
 
   /** Loads saved progress from the device. Call once at startup. */
   hydrate: () => Promise<void>
+  /** Re-reads everything from the device (after cloud sync wrote merged progress). */
+  reloadFromDevice: () => Promise<void>
   /** Creates and saves a guest player (onboarding). */
   createGuestPlayer: (input: NewPlayerInput) => Promise<void>
   /** Renames the player. */
@@ -88,6 +91,41 @@ export interface CompletedGame {
   /** The day's record after this game (daily goal progress). */
   day: DayRecord
   dailyGoalJustCompleted: boolean
+}
+
+type SetState = (partial: Partial<GameState>) => void
+
+/** Reads every store from the device into memory (used at startup and after sync). */
+async function loadEverythingFromDevice(set: SetState): Promise<void> {
+  const [saved, scriptureProgress, rewardTransactions, loadedGarden, quests, days] = await Promise.all([
+    loadGame(),
+    loadScriptureProgress(),
+    loadRewardTransactions(),
+    loadGarden(),
+    loadQuests(),
+    loadDays(),
+  ])
+  useQuestStore.setState({ quests, days })
+  if (saved) {
+    // Players from before the garden existed get the starting garden now.
+    let garden = loadedGarden
+    if (!garden) {
+      garden = { items: createStartingGarden(new Date()), inventory: {}, meta: { expansionsUnlocked: 0, updatedAt: new Date().toISOString() } }
+      await saveGarden(garden)
+    }
+    useGardenStore.setState({
+      items: garden.items,
+      inventory: garden.inventory,
+      expansionsUnlocked: garden.meta.expansionsUnlocked,
+      updatedAt: garden.meta.updatedAt ?? '1970-01-01T00:00:00.000Z',
+    })
+    useSettingsStore.setState({ settings: { ...DEFAULT_SETTINGS, ...saved.settings } })
+    set({ profile: saved.profile, resources: saved.resources, scriptureProgress, rewardTransactions })
+  } else {
+    useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
+    useGardenStore.setState({ items: [], inventory: {}, expansionsUnlocked: 0 })
+    set({ profile: null, resources: null, scriptureProgress: {}, rewardTransactions: [] })
+  }
 }
 
 /** Learning analytics for a finished game (ids and numbers only). */
@@ -122,31 +160,9 @@ export const useGameStore = create<GameState>()((set, get) => ({
   hydrate: async () => {
     set({ status: 'loading', errorMessage: null })
     try {
-      const [saved, scriptureProgress, rewardTransactions, loadedGarden, quests, days] = await Promise.all([
-        loadGame(),
-        loadScriptureProgress(),
-        loadRewardTransactions(),
-        loadGarden(),
-        loadQuests(),
-        loadDays(),
-      ])
-      useQuestStore.setState({ quests, days })
-      if (saved) {
-        // Players from before the garden existed get the starting garden now.
-        let garden = loadedGarden
-        if (!garden) {
-          garden = { items: createStartingGarden(new Date()), inventory: {}, meta: { expansionsUnlocked: 0 } }
-          await saveGarden(garden)
-        }
-        useGardenStore.setState({ items: garden.items, inventory: garden.inventory, expansionsUnlocked: garden.meta.expansionsUnlocked })
-        useSettingsStore.setState({ settings: { ...DEFAULT_SETTINGS, ...saved.settings } })
-        set({ status: 'ready', profile: saved.profile, resources: saved.resources, scriptureProgress, rewardTransactions })
-        await useQuestStore.getState().ensureQuestsFor(toLocalDateKey(new Date()))
-      } else {
-        useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
-        useGardenStore.setState({ items: [], inventory: {}, expansionsUnlocked: 0 })
-        set({ status: 'ready', profile: null, resources: null, scriptureProgress: {}, rewardTransactions: [] })
-      }
+      await loadEverythingFromDevice(set)
+      set({ status: 'ready' })
+      if (get().profile) await useQuestStore.getState().ensureQuestsFor(toLocalDateKey(new Date()))
     } catch (error) {
       set({
         status: 'error',
@@ -155,6 +171,8 @@ export const useGameStore = create<GameState>()((set, get) => ({
     }
   },
 
+  reloadFromDevice: () => loadEverythingFromDevice(set),
+
   createGuestPlayer: async ({ displayName, preferredTranslation, dailyGoal }) => {
     const name = cleanDisplayName(displayName)
     if (!name) throw new Error('Please enter a display name.')
@@ -162,17 +180,17 @@ export const useGameStore = create<GameState>()((set, get) => ({
     const profile: PlayerProfile = { id: createId(), displayName: name, createdAt: now, updatedAt: now }
     const resources: PlayerResources = { ...STARTING_RESOURCES, updatedAt: now }
     const settings = { ...DEFAULT_SETTINGS, preferredTranslation, dailyGoal }
-    const garden = { items: createStartingGarden(new Date(now)), inventory: {}, meta: { expansionsUnlocked: 0 } }
+    const garden = { items: createStartingGarden(new Date(now)), inventory: {}, meta: { expansionsUnlocked: 0, updatedAt: now } }
     await saveNewGame({ profile, resources, settings }, garden)
     useSettingsStore.setState({ settings })
-    useGardenStore.setState({ items: garden.items, inventory: {}, expansionsUnlocked: 0 })
+    useGardenStore.setState({ items: garden.items, inventory: {}, expansionsUnlocked: 0, updatedAt: now })
     useQuestStore.setState({ quests: [], days: {} })
     set({ profile, resources, scriptureProgress: {}, rewardTransactions: [] })
     await useQuestStore.getState().ensureQuestsFor(toLocalDateKey(new Date()))
     void track('onboarding_completed', { dailyGoal, translation: preferredTranslation })
   },
 
-  updateDisplayName: async (displayName) => {
+  updateDisplayName: (displayName) => exclusive(async () => {
     const current = get().profile
     if (!current) return
     const name = cleanDisplayName(displayName)
@@ -180,9 +198,9 @@ export const useGameStore = create<GameState>()((set, get) => ({
     const profile = { ...current, displayName: name, updatedAt: nowIso() }
     await saveProfile(profile)
     set({ profile })
-  },
+  }),
 
-  completeGame: async (session) => {
+  completeGame: (session) => exclusive(async () => {
     const last = get().lastGame
     if (last?.session.id === session.id) return last
     if (await loadGameSession(session.id)) throw new Error('This game has already been saved.')
@@ -262,7 +280,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
     })
     trackGame(completed)
     return completed
-  },
+  }),
 
   resetProgress: async () => {
     await resetAllProgress()

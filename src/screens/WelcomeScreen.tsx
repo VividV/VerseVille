@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/common/Button'
 import { GardenBackdrop } from '../components/common/GardenBackdrop'
+import { isCloudConfigured } from '../services/auth/supabaseClient'
 
 export function WelcomeScreen() {
   const navigate = useNavigate()
@@ -16,13 +17,24 @@ export function WelcomeScreen() {
             <Button size="lg" fullWidth onClick={() => navigate('/onboarding')}>
               Begin Your Journey
             </Button>
-            {/* Cloud accounts arrive in Phase 8. Until then the button is honestly disabled. */}
-            <Button size="lg" variant="secondary" fullWidth disabled aria-describedby="existing-player-note">
-              Existing Player
-            </Button>
-            <p id="existing-player-note" className="text-sm text-ink-soft">
-              Sign-in is coming soon. You can play now without an account.
-            </p>
+            {isCloudConfigured() ? (
+              <>
+                <Button size="lg" variant="secondary" fullWidth onClick={() => navigate('/account?mode=sign-in')}>
+                  Existing Player
+                </Button>
+                <p className="text-sm text-ink-soft">No account needed to start — you can create one later.</p>
+              </>
+            ) : (
+              <>
+                {/* Built without Supabase settings: accounts aren't available, so the button is honestly disabled. */}
+                <Button size="lg" variant="secondary" fullWidth disabled aria-describedby="existing-player-note">
+                  Existing Player
+                </Button>
+                <p id="existing-player-note" className="text-sm text-ink-soft">
+                  Accounts aren't available in this version. You can play now without one.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>

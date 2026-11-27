@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { PlayerSettings } from '../types/player'
 import { saveSettings } from '../services/persistence/saveService'
+import { exclusive } from '../services/sync/lock'
 
 export const DEFAULT_SETTINGS: PlayerSettings = {
   preferredTranslation: 'KJV',
@@ -20,9 +21,10 @@ interface SettingsState {
 
 export const useSettingsStore = create<SettingsState>()((set, get) => ({
   settings: DEFAULT_SETTINGS,
-  updateSettings: async (changes) => {
-    const next = { ...get().settings, ...changes }
-    set({ settings: next })
-    await saveSettings(next)
-  },
+  updateSettings: (changes) =>
+    exclusive(async () => {
+      const next = { ...get().settings, ...changes, updatedAt: new Date().toISOString() }
+      set({ settings: next })
+      await saveSettings(next)
+    }),
 }))

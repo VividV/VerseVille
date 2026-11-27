@@ -15,6 +15,7 @@ import { saveGardenChange } from '../services/persistence/saveService'
 import { createId } from '../utils/idUtils'
 import { useGameStore } from './gameStore'
 import { track } from '../services/analytics/analytics'
+import { exclusive } from '../services/sync/lock'
 
 export const PURCHASE_MESSAGES: Record<PurchaseProblem, string> = {
   'not-for-sale': "This item can't be bought.",
@@ -27,6 +28,8 @@ interface GardenState {
   items: PlacedGardenItem[]
   inventory: Inventory
   expansionsUnlocked: number
+  /** When the garden layout last changed (for merging devices). */
+  updatedAt: string
 
   buyItem: (itemId: string) => Promise<void>
   placeItem: (itemId: string, x: number, y: number) => Promise<PlacedGardenItem>
@@ -49,8 +52,9 @@ export const useGardenStore = create<GardenState>()((set, get) => ({
   items: [],
   inventory: {},
   expansionsUnlocked: 0,
+  updatedAt: '1970-01-01T00:00:00.000Z',
 
-  buyItem: async (itemId) => {
+  buyItem: (itemId) => exclusive(async () => {
     const def = requireItem(itemId)
     const { resources, rewardTransactions } = useGameStore.getState()
     if (!resources) throw new Error('No player profile.')
@@ -66,17 +70,19 @@ export const useGardenStore = create<GardenState>()((set, get) => ({
     const transaction = purchaseTransaction(def, createId(), now)
     const newResources = applyTransactions(resources, [transaction], now) // throws if it would go negative
     const inventory = addToInventory(get().inventory, itemId)
+    const meta = stamp(get().expansionsUnlocked)
     await saveGardenChange({
+      meta,
       inventory: { [itemId]: inventory[itemId] },
       transactions: [transaction],
       resources: newResources,
     })
     useGameStore.setState({ resources: newResources, rewardTransactions: [...rewardTransactions, transaction] })
-    set({ inventory })
+    set({ inventory, updatedAt: meta.updatedAt })
     void track('garden_item_purchased', { itemId })
-  },
+  }),
 
-  placeItem: async (itemId, x, y) => {
+  placeItem: (itemId, x, y) => exclusive(async () => {
     const def = requireItem(itemId)
     if ((get().inventory[itemId] ?? 0) < 1) throw new Error('You need to buy this item first.')
     const check = validatePlacement(get(), def, x, y)
@@ -90,32 +96,35 @@ export const useGardenStore = create<GardenState>()((set, get) => ({
       placedAt: new Date().toISOString(),
     }
     const inventory = addToInventory(get().inventory, itemId, -1)
-    await saveGardenChange({ putItems: [placed], inventory: { [itemId]: inventory[itemId] ?? 0 } })
-    set({ items: [...get().items, placed], inventory })
+    const meta = stamp(get().expansionsUnlocked)
+    await saveGardenChange({ meta, putItems: [placed], inventory: { [itemId]: inventory[itemId] ?? 0 } })
+    set({ items: [...get().items, placed], inventory, updatedAt: meta.updatedAt })
     void track('garden_item_placed', { itemId })
     return placed
-  },
+  }),
 
-  moveItem: async (placedId, x, y) => {
+  moveItem: (placedId, x, y) => exclusive(async () => {
     const item = get().items.find((i) => i.id === placedId)
     if (!item) throw new Error('Item not found.')
     const check = validatePlacement(get(), requireItem(item.itemId), x, y, placedId)
     if (!check.ok) throw new Error(PLACEMENT_MESSAGES[check.reason])
     const moved = { ...item, gridX: x, gridY: y }
-    await saveGardenChange({ putItems: [moved] })
-    set({ items: get().items.map((i) => (i.id === placedId ? moved : i)) })
-  },
+    const meta = stamp(get().expansionsUnlocked)
+    await saveGardenChange({ meta, putItems: [moved] })
+    set({ items: get().items.map((i) => (i.id === placedId ? moved : i)), updatedAt: meta.updatedAt })
+  }),
 
-  putAway: async (placedId) => {
+  putAway: (placedId) => exclusive(async () => {
     const item = get().items.find((i) => i.id === placedId)
     if (!item) throw new Error('Item not found.')
     if (PERMANENT_ITEMS.has(item.itemId)) throw new Error('This stays in your garden.')
     const inventory = addToInventory(get().inventory, item.itemId)
-    await saveGardenChange({ deleteItemIds: [placedId], inventory: { [item.itemId]: inventory[item.itemId] } })
-    set({ items: get().items.filter((i) => i.id !== placedId), inventory })
-  },
+    const meta = stamp(get().expansionsUnlocked)
+    await saveGardenChange({ meta, deleteItemIds: [placedId], inventory: { [item.itemId]: inventory[item.itemId] } })
+    set({ items: get().items.filter((i) => i.id !== placedId), inventory, updatedAt: meta.updatedAt })
+  }),
 
-  unlockExpansion: async () => {
+  unlockExpansion: () => exclusive(async () => {
     const expansion = nextExpansion(get().expansionsUnlocked)
     if (!expansion) throw new Error('All land is already unlocked.')
     const { resources, rewardTransactions } = useGameStore.getState()
@@ -126,11 +135,16 @@ export const useGardenStore = create<GardenState>()((set, get) => ({
     const transaction = expansionTransaction(expansion, now)
     const newResources = applyTransactions(resources, [transaction], now)
     const expansionsUnlocked = get().expansionsUnlocked + 1
-    await saveGardenChange({ meta: { expansionsUnlocked }, transactions: [transaction], resources: newResources })
+    const meta = stamp(expansionsUnlocked)
+    await saveGardenChange({ meta, transactions: [transaction], resources: newResources })
     useGameStore.setState({ resources: newResources, rewardTransactions: [...rewardTransactions, transaction] })
-    set({ expansionsUnlocked })
-  },
+    set({ expansionsUnlocked, updatedAt: meta.updatedAt })
+  }),
 }))
+
+function stamp(expansionsUnlocked: number) {
+  return { expansionsUnlocked, updatedAt: new Date().toISOString() }
+}
 
 /** Number of scriptures ever mastered (used for land requirements). */
 export { masteredCount }

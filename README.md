@@ -17,7 +17,7 @@ Built in phases, following the product specification.
 | 5 | Reward engine (XP, coins, seeds, levels) | ✅ Done |
 | 6 | Interactive garden | ✅ Done |
 | 7 | Quests, collection, progress | ✅ Done |
-| 8 | Accounts & cloud sync (Supabase) | Not started — needs a Supabase project |
+| 8 | Accounts & cloud sync (Supabase) | ✅ Built — see "Accounts and cloud sync" |
 | 9 | Polish & testing | ✅ Done |
 
 ## Running it
@@ -38,7 +38,9 @@ To try the real, installable version locally: `npm run build && npm run preview`
 ## Putting it online (Vercel) and installing on Android
 
 1. Push this repository to GitHub, then in Vercel choose **Add New → Project** and import it. `vercel.json` already
-   sets the build command, output folder, page routing and caching. No environment variables are needed.
+   sets the build command, output folder, page routing and caching. For accounts, add the two environment variables
+   from `.env.example` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) under **Settings → Environment Variables**.
+   Without them the app runs in guest-only mode.
 2. Open the site on an Android phone in Chrome → menu → **Install app** (or **Add to Home screen**).
 3. After the first visit VerseVille works **offline**: the service worker (`public/sw.js`) saves every app file.
    Progress is saved on the phone in IndexedDB, and the app asks the browser to keep that data even when space is low.
@@ -169,3 +171,40 @@ repeat of the same id makes the database refuse the whole save. Rewards can't be
 - **Tests**: `npm test` runs 180+ automated tests, including `src/test/definitionOfDone.test.tsx`, which plays the
   whole spec §21 checklist through the real screens: onboarding, learning a verse with all three games, earning,
   building, closing the app and coming back the next day for a review.
+
+## Accounts and cloud sync (Phase 8, optional for players)
+
+Guests never need an account. Signed-in players' progress is saved to Supabase and synced across devices.
+
+**Setup (once)**
+1. Supabase → **SQL Editor** → paste and run `supabase/schema.sql`. (After changing items, prices, quests or verses in
+   `src/data`, run `python3 scripts/supabase/generate-seed.py` and run the file again — it's safe to re-run.)
+2. Supabase → **Authentication → Sign In / Providers → Email**: email + password is used. "Confirm email" is
+   recommended for launch, but Supabase's built-in mailer only sends to your team; set up custom SMTP
+   (Authentication → Emails → SMTP) before turning it on for the public, and set **Authentication → URL
+   Configuration → Site URL** to your Vercel address.
+3. Local development: copy `.env.example` to `.env.local` with your project URL and **publishable/anon** key.
+   Never use the `service_role` key in the app.
+
+**How sync works** (`src/services/sync`, merge rules in `src/engine/sync/merge.ts`)
+- The phone stays the main copy, so the game works offline. Sync runs at start-up, 2 seconds after any change, when
+  the connection returns, and on "Sync now".
+- Creating an account uploads the guest's progress. Signing in on another phone combines both devices' progress.
+- Conflicts are merged deterministically: reward transactions and games are combined by id; **balances are always
+  recalculated from the transaction ledger** (never overwritten); scripture history is combined (earliest
+  learned/mastered dates, all recall days — mastered verses are never lost); profile, settings and garden layout use
+  the most recent change, and the garden is then checked against what was actually bought.
+
+**Server-side checks** (`supabase/schema.sql`, spec §16)
+- Row Level Security on every table: players only see and change their own rows.
+- Balances can't be written by the app. Each reward/spending transaction is validated by the database: game rewards
+  against the saved game's type and accuracy (with the multiplier and daily caps), milestones against the scripture
+  record, quest rewards against a completed quest, purchases against the catalogue price, unlock level and
+  unique-item rule, land against level/mastered/coins. Balances can't go below zero.
+- The garden is saved only through `replace_garden()`, which checks bounds, locked land, the pond, overlaps and that
+  every item was started with or bought.
+- Known limit: the server trusts the accuracy the app reports for a game, so a modified app could still claim
+  perfect scores — but never more than the normal reward for that game, within the daily caps.
+
+**Live test**: `LIVE_SUPABASE=1 NODE_USE_ENV_PROXY=1 npx vitest run src/test/liveSupabase.test.ts` plays two devices
+against the real project, including cheating attempts the server must refuse. It needs "Confirm email" off.

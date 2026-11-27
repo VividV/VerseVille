@@ -67,6 +67,8 @@ const appRoutes: RouteObject[] = [
       },
     ],
   },
+  // Sign in / create account: open to guests and new devices alike.
+  { path: '/account', element: lazyScreen(() => import('../screens/AccountScreen'), 'AccountScreen') },
   { path: '*', element: <NotFoundScreen /> },
 ]
 

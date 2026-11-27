@@ -8,7 +8,7 @@
  */
 
 export const DB_NAME = 'verseville'
-export const DB_VERSION = 4 // v2: added "garden"; v3: added "days"; v4: added "analytics"
+export const DB_VERSION = 5 // v2 "garden"; v3 "days"; v4 "analytics"; v5 "account"
 
 export const STORES = [
   'profile',
@@ -23,6 +23,7 @@ export const STORES = [
   'garden',
   'days',
   'analytics',
+  'account',
 ] as const
 
 export type StoreName = (typeof STORES)[number]
@@ -149,6 +150,27 @@ export async function clearAllStores(): Promise<void> {
   const db = await openDatabase()
   const tx = db.transaction([...STORES], 'readwrite')
   for (const name of STORES) tx.objectStore(name).clear()
+  await new Promise<void>((resolve, reject) => {
+    tx.oncomplete = () => resolve()
+    tx.onerror = () => reject(tx.error)
+    tx.onabort = () => reject(tx.error ?? new Error('Transaction aborted'))
+  })
+}
+
+/**
+ * Replaces the whole contents of some stores in ONE transaction (used when
+ * cloud sync writes the merged progress back to the device).
+ */
+export async function replaceStoresAtomically(contents: Partial<Record<StoreName, { key: string; value: unknown }[]>>): Promise<void> {
+  const names = Object.keys(contents) as StoreName[]
+  if (names.length === 0) return
+  const db = await openDatabase()
+  const tx = db.transaction(names, 'readwrite')
+  for (const name of names) {
+    const store = tx.objectStore(name)
+    store.clear()
+    for (const { key, value } of contents[name]!) store.put(value, key)
+  }
   await new Promise<void>((resolve, reject) => {
     tx.oncomplete = () => resolve()
     tx.onerror = () => reject(tx.error)

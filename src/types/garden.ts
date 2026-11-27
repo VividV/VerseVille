@@ -42,6 +42,8 @@ export interface GardenExpansion {
 /** Saved garden state besides the items: how much land is unlocked. */
 export interface GardenMeta {
   expansionsUnlocked: number
+  /** When the garden last changed (used to merge devices). Missing on old saves. */
+  updatedAt?: string
 }
 
 /** Unplaced items the player owns: item id → quantity (spec §8 inventory). */

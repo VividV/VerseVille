@@ -29,4 +29,6 @@ export interface PlayerSettings {
   textSize: TextSize
   highContrast: boolean
   reducedMotion: boolean
+  /** When settings last changed (used to merge devices). Missing on old saves. */
+  updatedAt?: string
 }

@@ -9,7 +9,17 @@ import type { GameSession } from '../../types/games'
 import type { RewardTransaction } from '../../types/rewards'
 import type { GardenMeta, Inventory, PlacedGardenItem } from '../../types/garden'
 import type { DailyQuest, DayRecord } from '../../types/quests'
-import { clearAllStores, getAllRecords, getRecord, putRecord, putRecordsAtomically, type AtomicWrite } from './localDatabase'
+import type { ProgressSnapshot } from '../../engine/sync/merge'
+import {
+  clearAllStores,
+  deleteRecord,
+  getAllRecords,
+  getRecord,
+  putRecord,
+  putRecordsAtomically,
+  replaceStoresAtomically,
+  type AtomicWrite,
+} from './localDatabase'
 
 /** Guest mode keeps exactly one player on the device, stored under this key. */
 const PLAYER_KEY = 'current'
@@ -186,4 +196,62 @@ export function loadGameSession(id: string): Promise<GameSession | undefined> {
 /** Deletes ALL saved progress on this device. */
 export function resetAllProgress(): Promise<void> {
   return clearAllStores()
+}
+
+// ---------- Whole-progress snapshots (used by cloud sync) ----------
+
+
+/** Everything that syncs, read from this device. */
+export async function loadLocalSnapshot(): Promise<ProgressSnapshot> {
+  const [game, progress, sessions, transactions, garden, quests, days] = await Promise.all([
+    loadGame(),
+    loadScriptureProgress(),
+    loadGameSessions(),
+    loadRewardTransactions(),
+    loadGarden(),
+    loadQuests(),
+    loadDays(),
+  ])
+  return {
+    profile: game?.profile ?? null,
+    settings: game?.settings ?? null,
+    progress,
+    sessions,
+    transactions,
+    garden,
+    quests,
+    days,
+  }
+}
+
+/** Replaces this device's progress with a (merged) snapshot, in one transaction. */
+export function writeLocalSnapshot(s: ProgressSnapshot, resources: PlayerResources): Promise<void> {
+  const one = <T>(value: T | null | undefined) => (value ? [{ key: PLAYER_KEY, value }] : [])
+  return replaceStoresAtomically({
+    profile: one(s.profile),
+    settings: one(s.settings),
+    resources: s.profile ? one(resources) : [],
+    scriptureProgress: Object.values(s.progress).map((p) => ({ key: p.scriptureId, value: p })),
+    gameSessions: s.sessions.map((x) => ({ key: x.id, value: x })),
+    rewardTransactions: s.transactions.map((t) => ({ key: t.id, value: t })),
+    gardenItems: (s.garden?.items ?? []).map((i) => ({ key: i.id, value: i })),
+    inventory: Object.entries(s.garden?.inventory ?? {}).map(([itemId, quantity]) => ({ key: itemId, value: { itemId, quantity } })),
+    garden: one(s.garden?.meta),
+    quests: s.quests.map((q) => ({ key: q.id, value: q })),
+    days: Object.values(s.days).map((d) => ({ key: d.date, value: d })),
+  })
+}
+
+export interface AccountRecord {
+  userId: string
+  email: string
+  lastSyncedAt: string | null
+}
+
+export function loadAccount(): Promise<AccountRecord | undefined> {
+  return getRecord<AccountRecord>('account', PLAYER_KEY)
+}
+
+export function saveAccount(account: AccountRecord | null): Promise<void> {
+  return account ? putRecord('account', PLAYER_KEY, account) : deleteRecord('account', PLAYER_KEY)
 }
