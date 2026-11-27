@@ -61,6 +61,7 @@ const appRoutes: RouteObject[] = [
           { path: '/quests', element: lazyScreen(() => import('../screens/DailyQuestsScreen'), 'DailyQuestsScreen') },
           { path: '/collection', element: lazyScreen(() => import('../screens/CollectionScreen'), 'CollectionScreen') },
           { path: '/progress', element: lazyScreen(() => import('../screens/ProgressScreen'), 'ProgressScreen') },
+          { path: '/village-preview', element: lazyScreen(() => import('../screens/VillagePreviewScreen'), 'VillagePreviewScreen') },
           { path: '/shop', element: lazyScreen(() => import('../screens/GardenShopScreen'), 'GardenShopScreen') },
           { path: '/profile', element: lazyScreen(() => import('../screens/ProfileScreen'), 'ProfileScreen') },
         ],

@@ -142,6 +142,15 @@ export function GardenScreen() {
 
       {mode.kind === 'view' && (
         <>
+          <Link
+            to="/village-preview"
+            className="flex min-h-12 items-center justify-between gap-3 rounded-card bg-gradient-to-r from-[#F3D9A8] to-[#9FD0E6] px-4 py-3 font-extrabold text-ink shadow-soft"
+          >
+            <span>
+              <span aria-hidden="true">🏘️ </span>Preview the new village look
+            </span>
+            <span aria-hidden="true">→</span>
+          </Link>
           <div className="grid grid-cols-2 gap-2">
             <Link
               to="/shop"
