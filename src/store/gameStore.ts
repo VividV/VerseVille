@@ -12,6 +12,8 @@ import {
   loadScriptureProgress,
   resetAllProgress,
   loadGameSession,
+  loadGarden,
+  saveGarden,
   loadRewardTransactions,
   saveCompletedGame,
   saveNewGame,
@@ -20,6 +22,8 @@ import {
 import { createId } from '../utils/idUtils'
 import { nowIso } from '../utils/dateUtils'
 import { DEFAULT_SETTINGS, useSettingsStore } from './settingsStore'
+import { useGardenStore } from './gardenStore'
+import { createStartingGarden } from '../engine/garden/startingGarden'
 
 export type LoadStatus = 'loading' | 'ready' | 'error'
 
@@ -85,16 +89,25 @@ export const useGameStore = create<GameState>()((set, get) => ({
   hydrate: async () => {
     set({ status: 'loading', errorMessage: null })
     try {
-      const [saved, scriptureProgress, rewardTransactions] = await Promise.all([
+      const [saved, scriptureProgress, rewardTransactions, loadedGarden] = await Promise.all([
         loadGame(),
         loadScriptureProgress(),
         loadRewardTransactions(),
+        loadGarden(),
       ])
       if (saved) {
+        // Players from before the garden existed get the starting garden now.
+        let garden = loadedGarden
+        if (!garden) {
+          garden = { items: createStartingGarden(new Date()), inventory: {}, meta: { expansionsUnlocked: 0 } }
+          await saveGarden(garden)
+        }
+        useGardenStore.setState({ items: garden.items, inventory: garden.inventory, expansionsUnlocked: garden.meta.expansionsUnlocked })
         useSettingsStore.setState({ settings: { ...DEFAULT_SETTINGS, ...saved.settings } })
         set({ status: 'ready', profile: saved.profile, resources: saved.resources, scriptureProgress, rewardTransactions })
       } else {
         useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
+        useGardenStore.setState({ items: [], inventory: {}, expansionsUnlocked: 0 })
         set({ status: 'ready', profile: null, resources: null, scriptureProgress: {}, rewardTransactions: [] })
       }
     } catch (error) {
@@ -112,8 +125,10 @@ export const useGameStore = create<GameState>()((set, get) => ({
     const profile: PlayerProfile = { id: createId(), displayName: name, createdAt: now, updatedAt: now }
     const resources: PlayerResources = { ...STARTING_RESOURCES, updatedAt: now }
     const settings = { ...DEFAULT_SETTINGS, preferredTranslation, dailyGoal }
-    await saveNewGame({ profile, resources, settings })
+    const garden = { items: createStartingGarden(new Date(now)), inventory: {}, meta: { expansionsUnlocked: 0 } }
+    await saveNewGame({ profile, resources, settings }, garden)
     useSettingsStore.setState({ settings })
+    useGardenStore.setState({ items: garden.items, inventory: {}, expansionsUnlocked: 0 })
     set({ profile, resources, scriptureProgress: {}, rewardTransactions: [] })
   },
 
@@ -175,6 +190,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
   resetProgress: async () => {
     await resetAllProgress()
     useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
+    useGardenStore.setState({ items: [], inventory: {}, expansionsUnlocked: 0 })
     set({ profile: null, resources: null, scriptureProgress: {}, rewardTransactions: [], lastGame: null })
   },
 }))

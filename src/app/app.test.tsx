@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterProvider } from 'react-router-dom'
 import { AppProviders } from './providers'
@@ -23,7 +23,7 @@ async function onboard(user: ReturnType<typeof userEvent.setup>) {
   await user.click(await screen.findByRole('button', { name: 'Begin Your Journey' }))
   await user.type(screen.getByLabelText('What should we call you?'), 'Grace')
   await user.click(screen.getByRole('button', { name: 'Enter My Garden' }))
-  await screen.findByRole('heading', { name: /welcome back, grace/i })
+  await screen.findByRole('heading', { name: /grace's garden/i })
 }
 
 describe('app navigation', () => {
@@ -46,9 +46,9 @@ describe('app navigation', () => {
     expect(screen.getByLabelText('5 seeds')).toBeInTheDocument()
     expect(screen.getByLabelText('Level 1')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('link', { name: 'Scriptures' }))
+    await user.click(within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Scriptures' }))
     expect(router.state.location.pathname).toBe('/scriptures')
-    await user.click(screen.getByRole('link', { name: 'Quests' }))
+    await user.click(within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Quests' }))
     expect(router.state.location.pathname).toBe('/quests')
     await user.click(screen.getByRole('link', { name: 'Settings' }))
     expect(await screen.findByRole('heading', { name: /profile & settings/i })).toBeInTheDocument()
@@ -60,7 +60,7 @@ describe('app navigation', () => {
     await onboard(user)
     // "Refresh" the app at the onboarding URL.
     const router = renderApp('/onboarding')
-    await screen.findAllByRole('heading', { name: /welcome back, grace/i })
+    await screen.findAllByRole('heading', { name: /grace's garden/i })
     expect(router.state.location.pathname).toBe('/garden')
   })
 
@@ -68,7 +68,7 @@ describe('app navigation', () => {
     const user = userEvent.setup()
     const router = renderApp('/welcome')
     await onboard(user)
-    await user.click(screen.getByRole('link', { name: 'Profile' }))
+    await user.click(within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Profile' }))
 
     await user.click(await screen.findByRole('button', { name: 'Large' }))
     expect(document.documentElement.dataset.textSize).toBe('large')

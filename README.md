@@ -15,8 +15,8 @@ Built in phases, following the product specification.
 | 3 | Memorisation games | ✅ Done |
 | 4 | Learning engine (mastery, spaced repetition) | ✅ Done |
 | 5 | Reward engine (XP, coins, seeds, levels) | ✅ Done |
-| 6 | Interactive garden | Next |
-| 7 | Quests, collection, progress | — |
+| 6 | Interactive garden | ✅ Done |
+| 7 | Quests, collection, progress | Next |
 | 8 | Accounts & cloud sync (Supabase) | — |
 | 9 | Polish & testing | — |
 
@@ -39,18 +39,21 @@ To try it on an Android phone on the same Wi-Fi: `npm run dev -- --host`, then o
 src/
   app/          App entry, router (with new/returning player guards), providers (loading + accessibility)
   components/
+    garden/     GardenCanvas, item drawings (itemArt), placement bar, item & land modals
     games/      MissingWordsGame, WordOrderGame (tap + drag), VerseRecallGame, results & feedback
     scripture/  ScriptureCard, ScriptureText, ScriptureExplanation, MasteryBadge, ScriptureProgress
     common/     Button, Card, Modal, ProgressBar, LoadingState, EmptyState, GardenBackdrop
     layout/     AppShell, TopResourceBar, BottomNavigation, icons
   screens/      One file per screen
   data/         scriptures.json (66 KJV verses), topics.json — generated, see scripts/scripture-data/
+                buildings.json, decorations.json, expansions.json, levels.json — edit freely
   engine/       Game rules (no React here)
     scripture/  catalogue lookups, search & filters, learning status
     games/      Missing Words & Word Order rules, verse tokens, recommendations, game sessions
     memorisation/ recallScoring, mastery, scheduler (spaced repetition), learningEngine, reviewQueue
     rewards/    rewardCalculator.ts (all rewards, caps, multipliers), economy.ts (balances, no negatives)
-    progression/ playerLevel.ts (XP → level)
+    progression/ playerLevel.ts (XP → level), gardenUnlocks.ts (land expansions)
+    garden/     catalog, gardenGrid (placement rules), shop, startingGarden
   store/        Zustand stores: gameStore (player, resources), settingsStore
   services/
     persistence/ localDatabase.ts (IndexedDB wrapper), saveService.ts (what gets saved)
@@ -112,3 +115,14 @@ Levels: XP needed for the next level = 100 + level × 50; XP is never reset.
 Every reward is a transaction with a predictable id (e.g. `scripture-mastered:psalm-23-1-kjv`). A finished game, its
 progress, its transactions and the new balance are saved in one IndexedDB transaction; transactions are *added*, so a
 repeat of the same id makes the database refuse the whole save. Rewards can't be granted twice.
+
+## The garden
+
+- 8 tiles wide. The first 8 rows (8 × 8) are open; each land expansion (`src/data/expansions.json`) adds rows below:
+  Meadow (level 3, 10 mastered, 100 coins), Orchard (level 5, 25 mastered, 250 coins), Riverside (level 8, 50 mastered, 500 coins).
+- New players start with a cottage, the Scripture Tree, three flower beds and a path. The pond can't be built on.
+- Items (`src/data/buildings.json`, `decorations.json`) have a size, coin/seed cost, unlock level and whether they're
+  unique. Unique buildings can be owned once; decorations, plants and paths can be bought again and again.
+- Buying puts an item in "Ready to place". Placing: tap a spot, check the preview, Confirm. Tap any item to move it or
+  put it away (the cottage and Scripture Tree always stay). Tapping the Scripture Tree continues learning.
+- Purchases and land are recorded as transactions with negative amounts, saved together with the new balance.

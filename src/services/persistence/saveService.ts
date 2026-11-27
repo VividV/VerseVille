@@ -7,7 +7,8 @@ import type { PlayerProfile, PlayerResources, PlayerSettings } from '../../types
 import type { PlayerScripture } from '../../types/scripture'
 import type { GameSession } from '../../types/games'
 import type { RewardTransaction } from '../../types/rewards'
-import { clearAllStores, getAllRecords, getRecord, putRecord, putRecordsAtomically } from './localDatabase'
+import type { GardenMeta, Inventory, PlacedGardenItem } from '../../types/garden'
+import { clearAllStores, getAllRecords, getRecord, putRecord, putRecordsAtomically, type AtomicWrite } from './localDatabase'
 
 /** Guest mode keeps exactly one player on the device, stored under this key. */
 const PLAYER_KEY = 'current'
@@ -16,6 +17,12 @@ export interface SavedGame {
   profile: PlayerProfile
   resources: PlayerResources
   settings: PlayerSettings
+}
+
+export interface SavedGarden {
+  items: PlacedGardenItem[]
+  inventory: Inventory
+  meta: GardenMeta
 }
 
 /** Loads the saved player, or `null` if this device has no player yet. */
@@ -29,13 +36,69 @@ export async function loadGame(): Promise<SavedGame | null> {
   return { profile, resources, settings }
 }
 
-/** Saves a brand-new player in one atomic write. */
-export async function saveNewGame(game: SavedGame): Promise<void> {
+/** Saves a brand-new player and their starting garden in one atomic write. */
+export async function saveNewGame(game: SavedGame, garden: SavedGarden): Promise<void> {
   await putRecordsAtomically([
     { store: 'profile', key: PLAYER_KEY, value: game.profile },
     { store: 'resources', key: PLAYER_KEY, value: game.resources },
     { store: 'settings', key: PLAYER_KEY, value: game.settings },
+    ...gardenWrites(garden),
   ])
+}
+
+function gardenWrites(garden: SavedGarden): AtomicWrite[] {
+  return [
+    ...garden.items.map((i) => ({ store: 'gardenItems' as const, key: i.id, value: i })),
+    ...Object.entries(garden.inventory).map(([itemId, quantity]) => ({
+      store: 'inventory' as const,
+      key: itemId,
+      value: { itemId, quantity },
+    })),
+    { store: 'garden', key: PLAYER_KEY, value: garden.meta },
+  ]
+}
+
+/** Loads the garden, or null if this player has none yet. */
+export async function loadGarden(): Promise<SavedGarden | null> {
+  const [meta, items, inventoryRows] = await Promise.all([
+    getRecord<GardenMeta>('garden', PLAYER_KEY),
+    getAllRecords<PlacedGardenItem>('gardenItems'),
+    getAllRecords<{ itemId: string; quantity: number }>('inventory'),
+  ])
+  if (!meta) return null
+  return { meta, items, inventory: Object.fromEntries(inventoryRows.map((r) => [r.itemId, r.quantity])) }
+}
+
+export function saveGarden(garden: SavedGarden): Promise<void> {
+  return putRecordsAtomically(gardenWrites(garden))
+}
+
+/**
+ * Saves one garden change atomically: placed items added/moved/removed,
+ * inventory quantities, land, and (for purchases) the spending record and new balance.
+ */
+export function saveGardenChange(change: {
+  putItems?: PlacedGardenItem[]
+  deleteItemIds?: string[]
+  /** item id → new quantity (0 removes it) */
+  inventory?: Record<string, number>
+  meta?: GardenMeta
+  transactions?: RewardTransaction[]
+  resources?: PlayerResources
+}): Promise<void> {
+  const writes: AtomicWrite[] = [
+    ...(change.putItems ?? []).map((i) => ({ store: 'gardenItems' as const, key: i.id, value: i })),
+    ...(change.deleteItemIds ?? []).map((id) => ({ store: 'gardenItems' as const, key: id, value: null, mode: 'delete' as const })),
+    ...Object.entries(change.inventory ?? {}).map(([itemId, quantity]) =>
+      quantity > 0
+        ? { store: 'inventory' as const, key: itemId, value: { itemId, quantity } }
+        : { store: 'inventory' as const, key: itemId, value: null, mode: 'delete' as const },
+    ),
+    ...(change.transactions ?? []).map((t) => ({ store: 'rewardTransactions' as const, key: t.id, value: t, mode: 'add' as const })),
+  ]
+  if (change.meta) writes.push({ store: 'garden', key: PLAYER_KEY, value: change.meta })
+  if (change.resources) writes.push({ store: 'resources', key: PLAYER_KEY, value: change.resources })
+  return putRecordsAtomically(writes)
 }
 
 export function saveProfile(profile: PlayerProfile): Promise<void> {

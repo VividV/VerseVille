@@ -12,6 +12,7 @@ import { MissingWordsScreen } from '../screens/MissingWordsScreen'
 import { WordOrderScreen } from '../screens/WordOrderScreen'
 import { VerseRecallScreen } from '../screens/VerseRecallScreen'
 import { GameCompletionScreen } from '../screens/GameCompletionScreen'
+import { GardenShopScreen } from '../screens/GardenShopScreen'
 import { ComingSoonScreen } from '../screens/ComingSoonScreen'
 import { NotFoundScreen } from '../screens/NotFoundScreen'
 
@@ -71,6 +72,7 @@ export const routes: RouteObject[] = [
               />
             ),
           },
+          { path: '/shop', element: <GardenShopScreen /> },
           { path: '/profile', element: <ProfileScreen /> },
         ],
       },

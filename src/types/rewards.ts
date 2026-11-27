@@ -1,5 +1,5 @@
-/** Where a reward came from. Quests and purchases are added in later phases. */
-export type RewardSourceType = 'game' | 'review' | 'scripture-learned' | 'scripture-mastered'
+/** Where a resource change came from. Spending uses negative amounts. Quests are added in Phase 7. */
+export type RewardSourceType = 'game' | 'review' | 'scripture-learned' | 'scripture-mastered' | 'purchase' | 'land-expansion'
 
 /**
  * One change to the player's resources (spec §8 reward_transactions, §11.7).

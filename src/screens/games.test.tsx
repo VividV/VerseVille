@@ -118,7 +118,7 @@ describe('game flow', () => {
 
   it('completion screen without a finished game returns to the garden', async () => {
     const router = await renderAsPlayer('/game-complete')
-    await screen.findByRole('heading', { name: /welcome back/i })
+    await screen.findByRole('heading', { name: /'s garden/i })
     expect(router.state.location.pathname).toBe('/garden')
   })
 })
