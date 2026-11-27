@@ -13,7 +13,9 @@ import { WordOrderScreen } from '../screens/WordOrderScreen'
 import { VerseRecallScreen } from '../screens/VerseRecallScreen'
 import { GameCompletionScreen } from '../screens/GameCompletionScreen'
 import { GardenShopScreen } from '../screens/GardenShopScreen'
-import { ComingSoonScreen } from '../screens/ComingSoonScreen'
+import { DailyQuestsScreen } from '../screens/DailyQuestsScreen'
+import { CollectionScreen } from '../screens/CollectionScreen'
+import { ProgressScreen } from '../screens/ProgressScreen'
 import { NotFoundScreen } from '../screens/NotFoundScreen'
 
 /** Only players who have finished onboarding can see the game screens. */
@@ -52,26 +54,9 @@ export const routes: RouteObject[] = [
           { path: '/scriptures', element: <ScriptureLibraryScreen /> },
           { path: '/scriptures/:scriptureId', element: <ScriptureDetailScreen /> },
           { path: '/scriptures/:scriptureId/games', element: <GameSelectionScreen /> },
-          {
-            path: '/quests',
-            element: (
-              <ComingSoonScreen
-                title="Daily Quests"
-                icon="🗒️"
-                message="Daily quests will appear here once scripture games are ready."
-              />
-            ),
-          },
-          {
-            path: '/collection',
-            element: (
-              <ComingSoonScreen
-                title="Collection"
-                icon="🃏"
-                message="Every scripture you master will be added to your collection as a card."
-              />
-            ),
-          },
+          { path: '/quests', element: <DailyQuestsScreen /> },
+          { path: '/collection', element: <CollectionScreen /> },
+          { path: '/progress', element: <ProgressScreen /> },
           { path: '/shop', element: <GardenShopScreen /> },
           { path: '/profile', element: <ProfileScreen /> },
         ],

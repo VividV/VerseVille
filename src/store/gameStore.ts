@@ -12,6 +12,8 @@ import {
   loadScriptureProgress,
   resetAllProgress,
   loadGameSession,
+  loadDays,
+  loadQuests,
   loadGarden,
   saveGarden,
   loadRewardTransactions,
@@ -24,6 +26,18 @@ import { nowIso } from '../utils/dateUtils'
 import { DEFAULT_SETTINGS, useSettingsStore } from './settingsStore'
 import { useGardenStore } from './gardenStore'
 import { createStartingGarden } from '../engine/garden/startingGarden'
+import { buildQuestsFor, questsForDate, useQuestStore } from './questStore'
+import {
+  applyQuestEvents,
+  dailyGoalTransaction,
+  emptyDay,
+  questDateForSession,
+  questEventsFrom,
+  recordStudy,
+} from '../engine/quests/questEngine'
+import { REWARD_CONFIG } from '../engine/rewards/rewardCalculator'
+import type { DailyQuest, DayRecord } from '../types/quests'
+import { toLocalDateKey } from '../utils/dateUtils'
 
 export type LoadStatus = 'loading' | 'ready' | 'error'
 
@@ -68,6 +82,11 @@ export interface CompletedGame {
   rewardSkipped: RewardSkipReason | null
   levelBefore: number
   levelAfter: number
+  /** Quests that this game completed. */
+  questsCompleted: DailyQuest[]
+  /** The day's record after this game (daily goal progress). */
+  day: DayRecord
+  dailyGoalJustCompleted: boolean
 }
 
 export const MAX_NAME_LENGTH = 24
@@ -89,12 +108,15 @@ export const useGameStore = create<GameState>()((set, get) => ({
   hydrate: async () => {
     set({ status: 'loading', errorMessage: null })
     try {
-      const [saved, scriptureProgress, rewardTransactions, loadedGarden] = await Promise.all([
+      const [saved, scriptureProgress, rewardTransactions, loadedGarden, quests, days] = await Promise.all([
         loadGame(),
         loadScriptureProgress(),
         loadRewardTransactions(),
         loadGarden(),
+        loadQuests(),
+        loadDays(),
       ])
+      useQuestStore.setState({ quests, days })
       if (saved) {
         // Players from before the garden existed get the starting garden now.
         let garden = loadedGarden
@@ -105,6 +127,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
         useGardenStore.setState({ items: garden.items, inventory: garden.inventory, expansionsUnlocked: garden.meta.expansionsUnlocked })
         useSettingsStore.setState({ settings: { ...DEFAULT_SETTINGS, ...saved.settings } })
         set({ status: 'ready', profile: saved.profile, resources: saved.resources, scriptureProgress, rewardTransactions })
+        await useQuestStore.getState().ensureQuestsFor(toLocalDateKey(new Date()))
       } else {
         useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
         useGardenStore.setState({ items: [], inventory: {}, expansionsUnlocked: 0 })
@@ -129,7 +152,9 @@ export const useGameStore = create<GameState>()((set, get) => ({
     await saveNewGame({ profile, resources, settings }, garden)
     useSettingsStore.setState({ settings })
     useGardenStore.setState({ items: garden.items, inventory: {}, expansionsUnlocked: 0 })
+    useQuestStore.setState({ quests: [], days: {} })
     set({ profile, resources, scriptureProgress: {}, rewardTransactions: [] })
+    await useQuestStore.getState().ensureQuestsFor(toLocalDateKey(new Date()))
   },
 
   updateDisplayName: async (displayName) => {
@@ -157,18 +182,47 @@ export const useGameStore = create<GameState>()((set, get) => ({
       completedAt: new Date(session.completedAt),
     })
 
+    // Daily goal and quests count towards the day the game was started.
+    const completedAt = new Date(session.completedAt)
+    const questDate = questDateForSession(completedAt, session.durationSeconds)
+    const { days, quests: allQuests } = useQuestStore.getState()
+    const dailyGoal = useSettingsStore.getState().settings.dailyGoal
+    const study = recordStudy(
+      days[questDate] ?? emptyDay(questDate),
+      session.scriptureId,
+      session.accuracy >= REWARD_CONFIG.minAccuracyForReward,
+      dailyGoal,
+      completedAt,
+    )
+    const dayQuests = questsForDate(allQuests, questDate)
+    const questApplied = applyQuestEvents(
+      dayQuests.length > 0 ? dayQuests : buildQuestsFor(questDate),
+      questEventsFrom(update.events, study.goalJustCompleted),
+      completedAt,
+    )
+
     // Rewards come only from the central reward engine.
     const allTransactions = get().rewardTransactions
+    const existingIds = new Set(allTransactions.map((t) => t.id))
     const { transactions, skipped } = calculateGameRewards({
       session,
       update,
-      existingTransactionIds: new Set(allTransactions.map((t) => t.id)),
+      existingTransactionIds: existingIds,
       allTransactions,
     })
-    const resources = applyTransactions(resourcesBefore, transactions, new Date(session.completedAt))
+    const goalTx = dailyGoalTransaction(questDate, completedAt)
+    if (study.goalJustCompleted && !existingIds.has(goalTx.id)) transactions.push(goalTx)
+    const resources = applyTransactions(resourcesBefore, transactions, completedAt)
     const savedSession = { ...session, rewardsGranted: true }
 
-    await saveCompletedGame({ session: savedSession, progress: update.progress, transactions, resources })
+    await saveCompletedGame({
+      session: savedSession,
+      progress: update.progress,
+      transactions,
+      resources,
+      quests: questApplied.quests,
+      day: study.day,
+    })
     const completed: CompletedGame = {
       session: savedSession,
       progressBefore,
@@ -177,7 +231,14 @@ export const useGameStore = create<GameState>()((set, get) => ({
       rewardSkipped: skipped,
       levelBefore: resourcesBefore.level,
       levelAfter: resources.level,
+      questsCompleted: questApplied.newlyCompleted,
+      day: study.day,
+      dailyGoalJustCompleted: study.goalJustCompleted,
     }
+    useQuestStore.setState({
+      quests: [...useQuestStore.getState().quests.filter((q) => q.questDate !== questDate), ...questApplied.quests],
+      days: { ...useQuestStore.getState().days, [questDate]: study.day },
+    })
     set({
       scriptureProgress: { ...get().scriptureProgress, [session.scriptureId]: update.progress },
       rewardTransactions: [...allTransactions, ...transactions],
@@ -191,6 +252,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
     await resetAllProgress()
     useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
     useGardenStore.setState({ items: [], inventory: {}, expansionsUnlocked: 0 })
+    useQuestStore.setState({ quests: [], days: {} })
     set({ profile: null, resources: null, scriptureProgress: {}, rewardTransactions: [], lastGame: null })
   },
 }))

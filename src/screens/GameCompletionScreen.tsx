@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { RewardSummary } from '../components/games/RewardSummary'
 import { LevelUpModal } from '../components/games/LevelUpModal'
+import { QuestUpdates } from '../components/quests/QuestUpdates'
 import { GameResultScreen } from '../components/games/GameResultScreen'
 import { LearningResult } from '../components/scripture/LearningResult'
 import { GAME_INFO, gamePath } from '../engine/games/gameRules'
@@ -17,6 +18,7 @@ export function GameCompletionScreen() {
   const game = useGameStore((s) => s.lastGame)
   const progressById = useGameStore((s) => s.scriptureProgress)
   const translation = useSettingsStore((s) => s.settings.preferredTranslation)
+  const dailyGoal = useSettingsStore((s) => s.settings.dailyGoal)
   const scripture = game ? getScriptureById(game.session.scriptureId) : undefined
   const [levelUpSeenFor, setLevelUpSeenFor] = useState<string | null>(null)
 
@@ -34,6 +36,7 @@ export function GameCompletionScreen() {
         <GameResultScreen session={session} scripture={scripture}>
           <RewardSummary rewards={game.rewards} skipped={game.rewardSkipped} />
           <LearningResult game={game} now={now} />
+          <QuestUpdates game={game} dailyGoal={dailyGoal} />
         </GameResultScreen>
 
         <nav aria-label="What next" className="flex flex-col gap-3">

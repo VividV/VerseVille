@@ -8,6 +8,7 @@ import type { PlayerScripture } from '../../types/scripture'
 import type { GameSession } from '../../types/games'
 import type { RewardTransaction } from '../../types/rewards'
 import type { GardenMeta, Inventory, PlacedGardenItem } from '../../types/garden'
+import type { DailyQuest, DayRecord } from '../../types/quests'
 import { clearAllStores, getAllRecords, getRecord, putRecord, putRecordsAtomically, type AtomicWrite } from './localDatabase'
 
 /** Guest mode keeps exactly one player on the device, stored under this key. */
@@ -134,13 +135,44 @@ export function saveCompletedGame(input: {
   progress: PlayerScripture
   transactions: RewardTransaction[]
   resources: PlayerResources
+  quests?: DailyQuest[]
+  day?: DayRecord
 }): Promise<void> {
   return putRecordsAtomically([
     { store: 'gameSessions', key: input.session.id, value: input.session, mode: 'add' },
     { store: 'scriptureProgress', key: input.progress.scriptureId, value: input.progress },
     ...input.transactions.map((t) => ({ store: 'rewardTransactions' as const, key: t.id, value: t, mode: 'add' as const })),
     { store: 'resources', key: PLAYER_KEY, value: input.resources },
+    ...(input.quests ?? []).map((q) => ({ store: 'quests' as const, key: q.id, value: q })),
+    ...(input.day ? [{ store: 'days' as const, key: input.day.date, value: input.day }] : []),
   ])
+}
+
+export function loadQuests(): Promise<DailyQuest[]> {
+  return getAllRecords<DailyQuest>('quests')
+}
+
+export async function loadDays(): Promise<Record<string, DayRecord>> {
+  const days = await getAllRecords<DayRecord>('days')
+  return Object.fromEntries(days.map((d) => [d.date, d]))
+}
+
+export function saveQuests(quests: DailyQuest[]): Promise<void> {
+  return putRecordsAtomically(quests.map((q) => ({ store: 'quests' as const, key: q.id, value: q })))
+}
+
+/** Claims a quest reward: the quest, its reward transaction (add-only) and the balance in one transaction. */
+export function saveQuestClaim(quest: DailyQuest, transaction: RewardTransaction, resources: PlayerResources): Promise<void> {
+  return putRecordsAtomically([
+    { store: 'quests', key: quest.id, value: quest },
+    { store: 'rewardTransactions', key: transaction.id, value: transaction, mode: 'add' },
+    { store: 'resources', key: PLAYER_KEY, value: resources },
+  ])
+}
+
+/** All finished games (for the progress dashboard). */
+export function loadGameSessions(): Promise<GameSession[]> {
+  return getAllRecords<GameSession>('gameSessions')
 }
 
 export function loadRewardTransactions(): Promise<RewardTransaction[]> {

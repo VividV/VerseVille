@@ -16,6 +16,8 @@ import { masteredCount, useGardenStore } from '../store/gardenStore'
 import { useSettingsStore } from '../store/settingsStore'
 import type { PlacedGardenItem } from '../types/garden'
 import { nextActivityPath } from './nextActivity'
+import { todayKey, useQuestStore } from '../store/questStore'
+import { canClaim } from '../engine/quests/questEngine'
 
 const REASON_TEXT = {
   review: 'Due for review',
@@ -47,6 +49,12 @@ export function GardenScreen() {
   const learnPath = next ? nextActivityPath(next) : '/scriptures'
   const upcoming = nextExpansion(expansionsUnlocked)
   const inventoryEntries = Object.entries(inventory).filter(([, q]) => q > 0)
+  const quests = useQuestStore((s) => s.quests)
+  const today = useQuestStore((s) => s.days[todayKey()])
+  const todaysQuests = quests.filter((q) => q.questDate === todayKey())
+  const questsDone = todaysQuests.filter((q) => q.completedAt).length
+  const toClaim = quests.filter(canClaim).length
+  const studiedToday = Math.min(today?.studiedScriptureIds.length ?? 0, dailyGoal)
 
   const startPlacing = (itemId: string, movingId?: string) => {
     const def = getItem(itemId)
@@ -143,6 +151,28 @@ export function GardenScreen() {
               <span aria-hidden="true">📖</span> Scriptures
             </Link>
           </div>
+
+          <Link
+            to="/quests"
+            className="flex min-h-14 items-center justify-between gap-3 rounded-card bg-cream px-4 py-3 shadow-soft hover:bg-leaf-light"
+          >
+            <span className="flex items-center gap-3">
+              <span className="text-2xl" aria-hidden="true">
+                🗒️
+              </span>
+              <span className="flex flex-col leading-tight">
+                <span className="font-extrabold text-leaf-dark">Daily quests</span>
+                <span className="text-sm text-ink-soft">
+                  {questsDone}/{todaysQuests.length} done · Goal {studiedToday}/{dailyGoal}
+                </span>
+              </span>
+            </span>
+            {toClaim > 0 ? (
+              <span className="rounded-full bg-gold px-3 py-1 text-sm font-extrabold text-ink">{toClaim} to claim</span>
+            ) : (
+              <span aria-hidden="true">→</span>
+            )}
+          </Link>
 
           {inventoryEntries.length > 0 && (
             <Card>

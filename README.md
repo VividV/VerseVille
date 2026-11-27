@@ -16,8 +16,8 @@ Built in phases, following the product specification.
 | 4 | Learning engine (mastery, spaced repetition) | ✅ Done |
 | 5 | Reward engine (XP, coins, seeds, levels) | ✅ Done |
 | 6 | Interactive garden | ✅ Done |
-| 7 | Quests, collection, progress | Next |
-| 8 | Accounts & cloud sync (Supabase) | — |
+| 7 | Quests, collection, progress | ✅ Done |
+| 8 | Accounts & cloud sync (Supabase) | Next |
 | 9 | Polish & testing | — |
 
 ## Running it
@@ -46,7 +46,7 @@ src/
     layout/     AppShell, TopResourceBar, BottomNavigation, icons
   screens/      One file per screen
   data/         scriptures.json (66 KJV verses), topics.json — generated, see scripts/scripture-data/
-                buildings.json, decorations.json, expansions.json, levels.json — edit freely
+                buildings.json, decorations.json, expansions.json, levels.json, quests.json — edit freely
   engine/       Game rules (no React here)
     scripture/  catalogue lookups, search & filters, learning status
     games/      Missing Words & Word Order rules, verse tokens, recommendations, game sessions
@@ -54,6 +54,7 @@ src/
     rewards/    rewardCalculator.ts (all rewards, caps, multipliers), economy.ts (balances, no negatives)
     progression/ playerLevel.ts (XP → level), gardenUnlocks.ts (land expansions)
     garden/     catalog, gardenGrid (placement rules), shop, startingGarden
+    quests/     questEngine.ts (daily quests, daily goal, streak)
   store/        Zustand stores: gameStore (player, resources), settingsStore
   services/
     persistence/ localDatabase.ts (IndexedDB wrapper), saveService.ts (what gets saved)
@@ -126,3 +127,16 @@ repeat of the same id makes the database refuse the whole save. Rewards can't be
 - Buying puts an item in "Ready to place". Placing: tap a spot, check the preview, Confirm. Tap any item to move it or
   put it away (the cottage and Scripture Tree always stay). Tapping the Scripture Tree continues learning.
 - Purchases and land are recorded as transactions with negative amounts, saved together with the new balance.
+
+## Daily quests, collection and progress
+
+- **Daily goal** (1, 3 or 5 scriptures, set in Profile): a scripture counts once it has a successful game (60%+)
+  that day. Reaching the goal gives 1 seed automatically.
+- **Quests** (`src/data/quests.json`): three each day — the daily goal, one Verse Recall, and a review quest if
+  reviews are due (otherwise "learn one scripture"). Progress comes only from real game events. Completed quests are
+  claimed on the Quests screen (each once); unclaimed ones from earlier days stay claimable. A game counts towards the
+  day it was *started*, so midnight never resets a quest mid-game.
+- **Collection**: a card for every verse ever mastered. Mastered verses are never removed; if mastery dips the card
+  shows "Needs a review". Filters: topic, mastery level, recently mastered.
+- **My Progress** (Profile → My Progress): headline is *verses you can recall* (Strong + Mastered) and 30-day recall
+  accuracy, then learned, mastered, reviews, streak, level and garden stage.

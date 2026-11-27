@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/common/Button'
 import { Card } from '../components/common/Card'
 import { Modal } from '../components/common/Modal'
@@ -82,6 +82,16 @@ export function ProfileScreen() {
   return (
     <div className="flex flex-col gap-4 animate-pop-in">
       <h1 className="text-2xl font-extrabold text-leaf-dark">Profile &amp; Settings</h1>
+
+      <Link
+        to="/progress"
+        className="flex min-h-14 items-center justify-between rounded-card bg-leaf px-4 font-extrabold text-white shadow-soft hover:bg-leaf-dark"
+      >
+        <span>
+          <span aria-hidden="true">📈 </span>My Progress
+        </span>
+        <span aria-hidden="true">→</span>
+      </Link>
 
       <Card>
         <label htmlFor="profileName" className="block text-lg font-bold text-leaf-dark">
