@@ -6,6 +6,7 @@
 import type { PlayerProfile, PlayerResources, PlayerSettings } from '../../types/player'
 import type { PlayerScripture } from '../../types/scripture'
 import type { GameSession } from '../../types/games'
+import type { RewardTransaction } from '../../types/rewards'
 import { clearAllStores, getAllRecords, getRecord, putRecord, putRecordsAtomically } from './localDatabase'
 
 /** Guest mode keeps exactly one player on the device, stored under this key. */
@@ -60,14 +61,27 @@ export function saveScriptureProgress(progress: PlayerScripture): Promise<void> 
 }
 
 /**
- * Saves a finished game and the scripture progress it produced in ONE transaction,
- * so the two can never get out of step (e.g. if the browser closes mid-save).
+ * Saves everything a finished game changes in ONE transaction (spec §11.7):
+ * the session, the scripture progress, the new reward transactions and the new
+ * resource balance. Reward transactions are added with "add", so if any of them
+ * already exists the whole save is refused and no reward is granted twice.
  */
-export function saveCompletedGame(session: GameSession, progress: PlayerScripture): Promise<void> {
+export function saveCompletedGame(input: {
+  session: GameSession
+  progress: PlayerScripture
+  transactions: RewardTransaction[]
+  resources: PlayerResources
+}): Promise<void> {
   return putRecordsAtomically([
-    { store: 'gameSessions', key: session.id, value: session },
-    { store: 'scriptureProgress', key: progress.scriptureId, value: progress },
+    { store: 'gameSessions', key: input.session.id, value: input.session, mode: 'add' },
+    { store: 'scriptureProgress', key: input.progress.scriptureId, value: input.progress },
+    ...input.transactions.map((t) => ({ store: 'rewardTransactions' as const, key: t.id, value: t, mode: 'add' as const })),
+    { store: 'resources', key: PLAYER_KEY, value: input.resources },
   ])
+}
+
+export function loadRewardTransactions(): Promise<RewardTransaction[]> {
+  return getAllRecords<RewardTransaction>('rewardTransactions')
 }
 
 export function loadGameSession(id: string): Promise<GameSession | undefined> {

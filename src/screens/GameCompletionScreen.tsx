@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
+import { RewardSummary } from '../components/games/RewardSummary'
+import { LevelUpModal } from '../components/games/LevelUpModal'
 import { GameResultScreen } from '../components/games/GameResultScreen'
 import { LearningResult } from '../components/scripture/LearningResult'
 import { GAME_INFO, gamePath } from '../engine/games/gameRules'
@@ -15,6 +18,7 @@ export function GameCompletionScreen() {
   const progressById = useGameStore((s) => s.scriptureProgress)
   const translation = useSettingsStore((s) => s.settings.preferredTranslation)
   const scripture = game ? getScriptureById(game.session.scriptureId) : undefined
+  const [levelUpSeenFor, setLevelUpSeenFor] = useState<string | null>(null)
 
   // Nothing to show (e.g. the page was refreshed): go home. Progress was already saved.
   if (!game || !scripture) return <Navigate to="/garden" replace />
@@ -28,6 +32,7 @@ export function GameCompletionScreen() {
     <div className="min-h-dvh bg-paper">
       <main className="mx-auto flex max-w-md flex-col gap-4 px-4 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-[calc(1rem+env(safe-area-inset-top))]">
         <GameResultScreen session={session} scripture={scripture}>
+          <RewardSummary rewards={game.rewards} skipped={game.rewardSkipped} />
           <LearningResult game={game} now={now} />
         </GameResultScreen>
 
@@ -51,6 +56,11 @@ export function GameCompletionScreen() {
           </Link>
         </nav>
       </main>
+      <LevelUpModal
+        level={game.levelAfter}
+        open={game.levelAfter > game.levelBefore && levelUpSeenFor !== session.id}
+        onClose={() => setLevelUpSeenFor(session.id)}
+      />
     </div>
   )
 }

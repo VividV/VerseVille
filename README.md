@@ -14,8 +14,8 @@ Built in phases, following the product specification.
 | 2 | Scripture engine: dataset, library, detail, search & filters | ✅ Done |
 | 3 | Memorisation games | ✅ Done |
 | 4 | Learning engine (mastery, spaced repetition) | ✅ Done |
-| 5 | Reward engine (XP, coins, seeds, levels) | Next |
-| 6 | Interactive garden | — |
+| 5 | Reward engine (XP, coins, seeds, levels) | ✅ Done |
+| 6 | Interactive garden | Next |
 | 7 | Quests, collection, progress | — |
 | 8 | Accounts & cloud sync (Supabase) | — |
 | 9 | Polish & testing | — |
@@ -49,7 +49,8 @@ src/
     scripture/  catalogue lookups, search & filters, learning status
     games/      Missing Words & Word Order rules, verse tokens, recommendations, game sessions
     memorisation/ recallScoring, mastery, scheduler (spaced repetition), learningEngine, reviewQueue
-    rewards/    economy.ts (starting resources)
+    rewards/    rewardCalculator.ts (all rewards, caps, multipliers), economy.ts (balances, no negatives)
+    progression/ playerLevel.ts (XP → level)
   store/        Zustand stores: gameStore (player, resources), settingsStore
   services/
     persistence/ localDatabase.ts (IndexedDB wrapper), saveService.ts (what gets saved)
@@ -91,3 +92,23 @@ count as a review but keep the same interval.
 
 **Continue Learning** picks: due reviews (most overdue first) → a verse you started but haven't finished → a new verse.
 A verse is *learned* once all three activities have been completed.
+
+## Rewards
+
+All amounts live in `REWARD_CONFIG` in `src/engine/rewards/rewardCalculator.ts`.
+
+| Source | XP | Coins | Seeds |
+| --- | --- | --- | --- |
+| Missing Words / Word Order (first time today, per verse) | 5 | 5 | – |
+| Verse Recall (first time today, per verse) | 15 | 10 | – |
+| Successful review | – | 5 | – |
+| Scripture learned (once) | 10 | – | 1 |
+| Scripture mastered (once) | 25 | 15 | 1 |
+
+Game and review rewards are multiplied by accuracy (85–94% ×1.2, 95%+ ×1.5) and need at least 60% accuracy.
+Milestones are never multiplied. Games and reviews can give at most 200 coins and 300 XP per day.
+Levels: XP needed for the next level = 100 + level × 50; XP is never reset.
+
+Every reward is a transaction with a predictable id (e.g. `scripture-mastered:psalm-23-1-kjv`). A finished game, its
+progress, its transactions and the new balance are saved in one IndexedDB transaction; transactions are *added*, so a
+repeat of the same id makes the database refuse the whole save. Rewards can't be granted twice.
