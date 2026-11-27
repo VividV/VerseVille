@@ -13,7 +13,7 @@ export interface GardenItemDefinition {
   height: number
   /** Unique buildings can be owned only once. */
   isUnique: boolean
-  /** Which drawing to use (components/garden/itemArt.tsx). */
+  /** Name of the item's drawing (the village art is chosen by item id in components/village/villageArt.tsx). */
   art: string
   /** Starting items that can't be bought (e.g. the Scripture Tree). */
   notForSale?: boolean

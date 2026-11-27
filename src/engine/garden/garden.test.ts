@@ -4,7 +4,7 @@ import { BASE_ROWS, GRID_COLUMNS, TOTAL_ROWS, occupiedTiles, unlockedRowCount, v
 import { addToInventory, checkPurchase, ownedCount, purchaseTransaction } from './shop'
 import { createStartingGarden } from './startingGarden'
 import { checkExpansion, nextExpansion } from '../progression/gardenUnlocks'
-import { ART_KEYS } from '../../components/garden/itemArt'
+import { hasVillageArt } from '../../components/village/villageArt'
 
 const start = createStartingGarden(new Date('2026-11-27T10:00:00'))
 const garden = { items: start, expansionsUnlocked: 0 }
@@ -15,7 +15,7 @@ const money = { coins: 100, seeds: 5, gems: 0, xp: 0 }
 describe('catalogue', () => {
   it('has a drawing, a positive size and a known category for every item', () => {
     for (const item of getAllItems()) {
-      expect(ART_KEYS, item.id).toContain(item.art)
+      expect(hasVillageArt(item.id), item.id).toBe(true)
       expect(item.width).toBeGreaterThan(0)
       expect(item.height).toBeGreaterThan(0)
       expect(['building', 'decoration', 'plant', 'path']).toContain(item.category)

@@ -1,26 +1,35 @@
 /**
- * PROTOTYPE: the garden as an isometric Bible-lands village.
- * Uses the player's real garden (items, land) and the same item taps as the
- * classic garden. Drag to look around, pinch or scroll to zoom.
+ * The garden, drawn as an isometric (2.5D) Bible-lands village.
+ * Drag to look around, pinch / scroll / buttons to zoom. In placement mode a
+ * faint grid appears, every unlocked tile becomes a button, and the item being
+ * placed is previewed in gold (fits) or red (doesn't fit).
+ * All placement rules come from src/engine/garden — this only draws.
  */
-import { useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type WheelEvent } from 'react'
-import type { PlacedGardenItem } from '../../types/garden'
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type WheelEvent } from 'react'
+import type { GardenItemDefinition, PlacedGardenItem } from '../../types/garden'
 import { getItem } from '../../engine/garden/catalog'
-import { BLOCKED_TILES, GRID_COLUMNS, expansionRows, unlockedRowCount } from '../../engine/garden/gardenGrid'
+import { BLOCKED_TILES, GRID_COLUMNS, expansionRows, unlockedRowCount, validatePlacement } from '../../engine/garden/gardenGrid'
 import { nextExpansion } from '../../engine/progression/gardenUnlocks'
-import { ItemArt } from '../garden/itemArt'
 import { corners, iso, lerp, pts, seeded, up, type Origin, type Pt } from './isoMath'
-import { Cypress, OliveTree, Palm, VillageItemArt, hasVillageArt, type ArtContext } from './villageArt'
+import { Cypress, OliveTree, Palm, VillageItemArt, type ArtContext } from './villageArt'
 
 const VIEW = { x: 170, y: 330, w: 660, h: 610 }
 const PLATFORM_DEPTH = 26
+
+export type VillageMode =
+  | { kind: 'view' }
+  | { kind: 'place'; def: GardenItemDefinition; movingId?: string; target: { x: number; y: number } | null }
 
 export interface VillageSceneProps {
   items: PlacedGardenItem[]
   expansionsUnlocked: number
   animate: boolean
+  mode?: VillageMode
+  /** An item that was just placed, to fade it in. */
+  justPlacedId?: string | null
   onItemTap: (item: PlacedGardenItem) => void
   onLockedTap: () => void
+  onTileTap?: (x: number, y: number) => void
 }
 
 // ---------- Background ------------------------------------------------------
@@ -347,18 +356,18 @@ function Spring({ o, animate }: { o: Origin; animate: boolean }) {
   )
 }
 
-function LockedLand({ o, firstRow, rows, name, onTap }: { o: Origin; firstRow: number; rows: number; name: string; onTap: () => void }) {
+function LockedLand({ o, firstRow, rows, name, onTap, disabled }: { o: Origin; firstRow: number; rows: number; name: string; onTap: () => void; disabled?: boolean }) {
   const c = corners(0, firstRow, GRID_COLUMNS, rows, 0, o)
   const rand = seeded(5)
   const mid = lerp(c.top, c.bottom, 0.5)
   return (
     <g
-      role="button"
-      tabIndex={0}
-      aria-label={`${name} · tap to unlock (locked land)`}
-      onClick={onTap}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onTap()}
-      style={{ cursor: 'pointer' }}
+      role={disabled ? undefined : 'button'}
+      tabIndex={disabled ? undefined : 0}
+      aria-label={disabled ? undefined : `${name} · tap to unlock (locked land)`}
+      onClick={disabled ? undefined : onTap}
+      onKeyDown={disabled ? undefined : (e) => (e.key === 'Enter' || e.key === ' ') && onTap()}
+      style={{ cursor: disabled ? undefined : 'pointer' }}
     >
       <polygon points={pts([c.top, c.right, c.bottom, c.left])} fill="#BFA97A" opacity="0.55" />
       {Array.from({ length: 16 }, (_, i) => {
@@ -381,6 +390,68 @@ function LockedLand({ o, firstRow, rows, name, onTap }: { o: Origin; firstRow: n
           🔒 {name}
         </text>
       </g>
+    </g>
+  )
+}
+
+/** Placement mode: faint grid, preview of the item, and a button on every unlocked tile. */
+function PlacementLayer({
+  o,
+  cols,
+  unlockedRows,
+  mode,
+  check,
+  onTileTap,
+}: {
+  o: Origin
+  cols: number
+  unlockedRows: number
+  mode: Extract<VillageMode, { kind: 'place' }>
+  check: ReturnType<typeof validatePlacement> | null
+  onTileTap: (x: number, y: number) => void
+}) {
+  const tiles: ReactNode[] = []
+  const grid: ReactNode[] = []
+  for (let y = 0; y < unlockedRows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const k = corners(x, y, 1, 1, 0, o)
+      const points = pts([k.top, k.right, k.bottom, k.left])
+      grid.push(<polygon key={`g${x},${y}`} points={points} fill="none" stroke="#FFFFFF" strokeOpacity="0.55" strokeWidth="0.8" />)
+      tiles.push(
+        <polygon
+          key={`t${x},${y}`}
+          points={points}
+          fill="transparent"
+          role="button"
+          tabIndex={0}
+          aria-label={`Place at row ${y + 1}, column ${x + 1}`}
+          onClick={() => onTileTap(x, y)}
+          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onTileTap(x, y)}
+          style={{ cursor: 'pointer' }}
+          className="outline-none focus-visible:fill-[rgba(232,184,91,0.35)]"
+        />,
+      )
+    }
+  }
+  const t = mode.target
+  const foot = t ? corners(t.x, t.y, mode.def.width, mode.def.height, 0, o) : null
+  return (
+    <g>
+      <g pointerEvents="none">{grid}</g>
+      {t && foot && (
+        <g pointerEvents="none">
+          <polygon
+            points={pts([foot.top, foot.right, foot.bottom, foot.left])}
+            fill={check?.ok ? 'rgba(232,184,91,0.45)' : 'rgba(182,75,60,0.45)'}
+            stroke={check?.ok ? '#E8B85B' : '#B64B3C'}
+            strokeWidth="2.5"
+          />
+          <g opacity="0.8">
+            <VillageItemArt itemId={mode.def.id} ctx={{ gx: t.x, gy: t.y, w: mode.def.width, d: mode.def.height, o, animate: false }} />
+          </g>
+        </g>
+      )}
+      {tiles}
     </g>
   )
 }
@@ -444,19 +515,41 @@ function useCamera() {
   /** Ignore the click that ends a drag. */
   const wasDrag = () => moved.current > 6
 
-  return { cam, svgRef, handlers: { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onWheel }, zoom, wasDrag }
+  /** Jump to a zoom level centred on a point in scene units. */
+  const focus = (scale: number, at: { x: number; y: number }) =>
+    setCam(clamp({ scale, x: (500 - at.x) * scale, y: (665 - at.y) * scale }))
+
+  return { cam, svgRef, handlers: { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onWheel }, zoom, focus, wasDrag }
 }
 
 // ---------- Scene -----------------------------------------------------------------
 
-export function VillageScene({ items, expansionsUnlocked, animate, onItemTap, onLockedTap }: VillageSceneProps) {
+export function VillageScene({
+  items,
+  expansionsUnlocked,
+  animate,
+  mode = { kind: 'view' },
+  justPlacedId,
+  onItemTap,
+  onLockedTap,
+  onTileTap,
+}: VillageSceneProps) {
+  const placing = mode.kind === 'place'
   const unlockedRows = unlockedRowCount(expansionsUnlocked)
   const upcoming = nextExpansion(expansionsUnlocked)
   const lockedRows = upcoming ? expansionRows(upcoming.id).rows : 0
   const rows = unlockedRows + lockedRows
   const cols = GRID_COLUMNS
   const o: Origin = { x: 500 - ((cols - rows) * 32) / 2, y: 540 - Math.max(0, rows - 10) * 8 }
-  const { cam, svgRef, handlers, zoom, wasDrag } = useCamera()
+  const { cam, svgRef, handlers, zoom, focus, wasDrag } = useCamera()
+
+  // Zoom in when placing starts, so tiles are big enough to tap; zoom back out afterwards.
+  const plotCentre = iso(cols / 2, unlockedRows / 2, 0, o)
+  useEffect(() => {
+    if (placing) focus(1.6, plotCentre)
+    else focus(1, { x: 500, y: 665 })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [placing])
 
   const occupied = useMemo(() => {
     const set = new Set<string>(BLOCKED_TILES.map((t) => `${t.x},${t.y}`))
@@ -493,7 +586,7 @@ export function VillageScene({ items, expansionsUnlocked, animate, onItemTap, on
         className="block h-auto w-full select-none"
         style={{ touchAction: 'none', background: '#E6D2A0' }}
         role="group"
-        aria-label="Your village"
+        aria-label="Your garden"
         {...handlers}
       >
         <defs>
@@ -550,35 +643,44 @@ export function VillageScene({ items, expansionsUnlocked, animate, onItemTap, on
           <Platform o={o} cols={cols} rows={rows} unlockedRows={unlockedRows} />
           <GroundDetail o={o} cols={cols} unlockedRows={unlockedRows} occupied={occupied} />
           {BLOCKED_TILES.some((t) => t.y < unlockedRows) && <Spring o={o} animate={animate} />}
-          {upcoming && <LockedLand o={o} firstRow={unlockedRows} rows={lockedRows} name={upcoming.name} onTap={tap(onLockedTap)} />}
+          {upcoming && <LockedLand o={o} firstRow={unlockedRows} rows={lockedRows} name={upcoming.name} onTap={tap(onLockedTap)} disabled={placing} />}
 
           {sorted.map(({ item, def }) => {
             const ctx: ArtContext = { gx: item.gridX, gy: item.gridY, w: def.width, d: def.height, o, animate }
             const c = corners(item.gridX, item.gridY, def.width, def.height, 0, o)
+            const moving = mode.kind === 'place' && mode.movingId === item.id
             return (
               <g
                 key={item.id}
-                role="button"
-                tabIndex={0}
+                role={placing ? undefined : 'button'}
+                tabIndex={placing ? undefined : 0}
                 aria-label={def.name}
-                onClick={tap(() => onItemTap(item))}
-                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onItemTap(item)}
-                style={{ cursor: 'pointer' }}
-                className="outline-none focus-visible:[&>polygon:first-child]:opacity-100"
+                aria-hidden={placing ? true : undefined}
+                onClick={placing ? undefined : tap(() => onItemTap(item))}
+                onKeyDown={placing ? undefined : (e) => (e.key === 'Enter' || e.key === ' ') && onItemTap(item)}
+                style={{ cursor: placing ? undefined : 'pointer', pointerEvents: placing ? 'none' : undefined }}
+                opacity={moving ? 0.3 : undefined}
+                className={item.id === justPlacedId ? 'animate-fade-in' : undefined}
               >
                 {/* invisible tap area covering the footprint and the space above it */}
                 <polygon points={pts([up(c.top, 60), up(c.right, 30), c.right, c.bottom, c.left, up(c.left, 30)])} fill="transparent" />
-                {hasVillageArt(def.id) ? (
-                  <VillageItemArt itemId={def.id} ctx={ctx} />
-                ) : (
-                  // Items without village art yet: their classic drawing, standing up.
-                  <foreignObject x={c.left.x} y={c.top.y - 40} width={c.right.x - c.left.x} height={c.bottom.y - c.top.y + 40}>
-                    <ItemArt art={def.art} width={def.width} height={def.height} className="h-full w-full" />
-                  </foreignObject>
-                )}
+                <VillageItemArt itemId={def.id} ctx={ctx} />
               </g>
             )
           })}
+
+          {mode.kind === 'place' && (
+            <PlacementLayer
+              o={o}
+              cols={cols}
+              unlockedRows={unlockedRows}
+              mode={mode}
+              check={mode.target ? validatePlacement({ items, expansionsUnlocked }, mode.def, mode.target.x, mode.target.y, mode.movingId) : null}
+              onTileTap={(x, y) => {
+                if (!wasDrag()) onTileTap?.(x, y)
+              }}
+            />
+          )}
 
           {/* village life: butterflies over flowers, chickens near homes */}
           {sorted

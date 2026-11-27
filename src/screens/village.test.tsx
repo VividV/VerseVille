@@ -12,17 +12,17 @@ async function openPreview(reducedMotion = false) {
   useGameStore.setState({ status: 'loading', profile: null, resources: null, scriptureProgress: {}, rewardTransactions: [], lastGame: null })
   await useGameStore.getState().createGuestPlayer({ displayName: 'Grace', preferredTranslation: 'KJV', dailyGoal: 3 })
   if (reducedMotion) await useSettingsStore.getState().updateSettings({ reducedMotion: true })
-  const router = createTestRouter('/village-preview')
+  const router = createTestRouter('/garden')
   render(
     <AppProviders>
       <RouterProvider router={router} />
     </AppProviders>,
   )
-  await screen.findByRole('group', { name: 'Your village' })
+  await screen.findByRole('group', { name: 'Your garden' })
   return router
 }
 
-describe('village preview (prototype)', () => {
+describe('village garden', () => {
   it('draws the real garden items as tappable buttons', async () => {
     await openPreview()
     expect(screen.getByRole('button', { name: 'Scripture Tree' })).toBeInTheDocument()
@@ -42,13 +42,13 @@ describe('village preview (prototype)', () => {
 
   it('has no animations when Reduce motion is on', async () => {
     await openPreview(true)
-    const svg = screen.getByRole('group', { name: 'Your village' })
+    const svg = screen.getByRole('group', { name: 'Your garden' })
     expect(svg.querySelectorAll('animate, animateMotion, animateTransform')).toHaveLength(0)
   })
 
   it('animates village life normally', async () => {
     await openPreview()
-    const svg = screen.getByRole('group', { name: 'Your village' })
+    const svg = screen.getByRole('group', { name: 'Your garden' })
     expect(svg.querySelectorAll('animate, animateMotion, animateTransform').length).toBeGreaterThan(10)
   })
 })
