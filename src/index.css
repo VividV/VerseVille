@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+
+/* VerseVille design tokens (spec §5.2). Adjust here during visual testing. */
+@theme {
+  --color-leaf: #5d9868;
+  --color-leaf-dark: #315a3d;
+  --color-leaf-light: #ddebd8;
+  --color-cream: #fff8ea;
+  --color-gold: #e8b85b;
+  --color-sky: #a8d5e5;
+  --color-peach: #f3c4a8;
+  --color-ink: #2f3a32;
+  --color-ink-soft: #5b675e;
+  --color-paper: #f7f5ec;
+
+  --font-sans: 'Nunito', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 6px 20px -8px rgb(49 90 61 / 0.35);
+}
+
+/* Accessibility settings are applied as attributes on <html> (see providers.tsx). */
+html {
+  font-size: 100%;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+html[data-text-size='large'] {
+  font-size: 112.5%;
+}
+html[data-text-size='extra-large'] {
+  font-size: 125%;
+}
+html[data-contrast='high'] {
+  --color-ink: #111a13;
+  --color-ink-soft: #24302a;
+  --color-leaf: #2f6b3c;
+}
+html[data-reduced-motion='true'] *,
+html[data-reduced-motion='true'] *::before,
+html[data-reduced-motion='true'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  background: var(--color-paper);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+@keyframes drift {
+  from {
+    transform: translateX(-10%);
+  }
+  to {
+    transform: translateX(110%);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-sway {
+  animation: sway 5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+.animate-drift {
+  animation: drift 60s linear infinite;
+}
+.animate-pop-in {
+  animation: pop-in 0.25s ease-out both;
+}
