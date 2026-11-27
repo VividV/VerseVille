@@ -7,6 +7,11 @@ import { GardenScreen } from '../screens/GardenScreen'
 import { ProfileScreen } from '../screens/ProfileScreen'
 import { ScriptureLibraryScreen } from '../screens/ScriptureLibraryScreen'
 import { ScriptureDetailScreen } from '../screens/ScriptureDetailScreen'
+import { GameSelectionScreen } from '../screens/GameSelectionScreen'
+import { MissingWordsScreen } from '../screens/MissingWordsScreen'
+import { WordOrderScreen } from '../screens/WordOrderScreen'
+import { VerseRecallScreen } from '../screens/VerseRecallScreen'
+import { GameCompletionScreen } from '../screens/GameCompletionScreen'
 import { ComingSoonScreen } from '../screens/ComingSoonScreen'
 import { NotFoundScreen } from '../screens/NotFoundScreen'
 
@@ -34,12 +39,18 @@ export const routes: RouteObject[] = [
   {
     element: <RequirePlayer />,
     children: [
+      // Games are full-screen (no tab bar) so players can focus.
+      { path: '/games/missing-words/:scriptureId', element: <MissingWordsScreen /> },
+      { path: '/games/word-order/:scriptureId', element: <WordOrderScreen /> },
+      { path: '/games/recall/:scriptureId', element: <VerseRecallScreen /> },
+      { path: '/game-complete', element: <GameCompletionScreen /> },
       {
         element: <AppShell />,
         children: [
           { path: '/garden', element: <GardenScreen /> },
           { path: '/scriptures', element: <ScriptureLibraryScreen /> },
           { path: '/scriptures/:scriptureId', element: <ScriptureDetailScreen /> },
+          { path: '/scriptures/:scriptureId/games', element: <GameSelectionScreen /> },
           {
             path: '/quests',
             element: (

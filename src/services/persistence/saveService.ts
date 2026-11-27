@@ -5,6 +5,7 @@
  */
 import type { PlayerProfile, PlayerResources, PlayerSettings } from '../../types/player'
 import type { PlayerScripture } from '../../types/scripture'
+import type { GameSession } from '../../types/games'
 import { clearAllStores, getAllRecords, getRecord, putRecord, putRecordsAtomically } from './localDatabase'
 
 /** Guest mode keeps exactly one player on the device, stored under this key. */
@@ -56,6 +57,15 @@ export async function loadScriptureProgress(): Promise<Record<string, PlayerScri
 
 export function saveScriptureProgress(progress: PlayerScripture): Promise<void> {
   return putRecord('scriptureProgress', progress.scriptureId, progress)
+}
+
+/** Saves a finished game. Sessions are kept by id, so saving the same session twice never duplicates it. */
+export function saveGameSession(session: GameSession): Promise<void> {
+  return putRecord('gameSessions', session.id, session)
+}
+
+export function loadGameSession(id: string): Promise<GameSession | undefined> {
+  return getRecord<GameSession>('gameSessions', id)
 }
 
 /** Deletes ALL saved progress on this device. */

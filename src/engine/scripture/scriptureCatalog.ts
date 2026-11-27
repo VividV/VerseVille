@@ -42,6 +42,13 @@ export function getTopicNames(scripture: Scripture): string[] {
   return scripture.topicIds.map((id) => TOPIC_BY_ID.get(id)?.name ?? id)
 }
 
+/** Every word from the other scriptures in this translation: wrong options for Missing Words. */
+export function getDistractorWords(scriptureId: string, translation: TranslationCode): string[] {
+  return getScriptures(translation)
+    .filter((s) => s.id !== scriptureId)
+    .flatMap((s) => s.text.split(/\s+/))
+}
+
 /** For tests and data checks. */
 export function getAllScripturesIncludingInactive(): Scripture[] {
   return ALL_SCRIPTURES

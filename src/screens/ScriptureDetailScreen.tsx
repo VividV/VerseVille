@@ -80,15 +80,12 @@ export function ScriptureDetailScreen() {
 
       <ScriptureProgress progress={progress} now={now} />
 
-      {/* Memorisation games are built in Phase 3; until then this button is honestly disabled. */}
-      <div className="flex flex-col gap-2">
-        <Button size="lg" fullWidth disabled aria-describedby="learn-note">
-          {isNew ? 'Learn this scripture' : 'Review this scripture'}
-        </Button>
-        <p id="learn-note" className="text-center text-sm text-ink-soft">
-          Memorisation games are being planted next.
-        </p>
-      </div>
+      <Link
+        to={`/scriptures/${scripture.id}/games`}
+        className="inline-flex min-h-14 w-full items-center justify-center rounded-full bg-leaf px-6 text-lg font-bold text-white shadow-soft hover:bg-leaf-dark"
+      >
+        {isNew ? 'Learn this scripture' : 'Review this scripture'}
+      </Link>
 
       {related.length > 0 && (
         <section aria-labelledby="related-heading">

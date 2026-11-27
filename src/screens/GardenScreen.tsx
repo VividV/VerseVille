@@ -20,8 +20,8 @@ export function GardenScreen() {
         <h2 className="text-lg font-extrabold text-leaf-dark">Today's Scripture Journey</h2>
         <p className="mt-1 text-ink-soft">
           Your daily goal is <strong className="text-ink">{dailyGoal}</strong>{' '}
-          {dailyGoal === 1 ? 'scripture' : 'scriptures'}. Memorisation games and the interactive garden are being
-          planted next. Meanwhile, explore the verses you'll learn.
+          {dailyGoal === 1 ? 'scripture' : 'scriptures'}. Pick a verse to start learning. Your
+          interactive garden is being planted next.
         </p>
         <Link
           to="/scriptures"

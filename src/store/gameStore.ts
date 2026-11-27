@@ -2,10 +2,12 @@ import { create } from 'zustand'
 import type { DailyGoal, PlayerProfile, PlayerResources, TranslationCode } from '../types/player'
 import { STARTING_RESOURCES } from '../engine/rewards/economy'
 import type { PlayerScripture } from '../types/scripture'
+import type { GameSession } from '../types/games'
 import {
   loadGame,
   loadScriptureProgress,
   resetAllProgress,
+  saveGameSession,
   saveNewGame,
   saveProfile,
 } from '../services/persistence/saveService'
@@ -28,6 +30,8 @@ interface GameState {
   resources: PlayerResources | null
   /** Progress on each started scripture, keyed by scripture id. Empty until a scripture is learned. */
   scriptureProgress: Record<string, PlayerScripture>
+  /** The game just finished, shown on the completion screen. */
+  lastGameSession: GameSession | null
 
   /** Loads saved progress from the device. Call once at startup. */
   hydrate: () => Promise<void>
@@ -35,6 +39,8 @@ interface GameState {
   createGuestPlayer: (input: NewPlayerInput) => Promise<void>
   /** Renames the player. */
   updateDisplayName: (displayName: string) => Promise<void>
+  /** Saves a finished game to the device, then makes it the "last game" for the completion screen. */
+  recordGameSession: (session: GameSession) => Promise<void>
   /** Wipes all progress on this device. */
   resetProgress: () => Promise<void>
 }
@@ -52,6 +58,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
   profile: null,
   resources: null,
   scriptureProgress: {},
+  lastGameSession: null,
 
   hydrate: async () => {
     set({ status: 'loading', errorMessage: null })
@@ -94,9 +101,14 @@ export const useGameStore = create<GameState>()((set, get) => ({
     set({ profile })
   },
 
+  recordGameSession: async (session) => {
+    await saveGameSession(session)
+    set({ lastGameSession: session })
+  },
+
   resetProgress: async () => {
     await resetAllProgress()
     useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
-    set({ profile: null, resources: null, scriptureProgress: {} })
+    set({ profile: null, resources: null, scriptureProgress: {}, lastGameSession: null })
   },
 }))
