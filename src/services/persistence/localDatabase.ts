@@ -8,7 +8,7 @@
  */
 
 export const DB_NAME = 'verseville'
-export const DB_VERSION = 1
+export const DB_VERSION = 5 // v2 "garden"; v3 "days"; v4 "analytics"; v5 "account"
 
 export const STORES = [
   'profile',
@@ -20,6 +20,10 @@ export const STORES = [
   'quests',
   'gameSessions',
   'rewardTransactions',
+  'garden',
+  'days',
+  'analytics',
+  'account',
 ] as const
 
 export type StoreName = (typeof STORES)[number]
@@ -105,19 +109,39 @@ export async function deleteRecord(store: StoreName, key: string): Promise<void>
   await withStore(store, 'readwrite', (s) => s.delete(key))
 }
 
+export interface AtomicWrite {
+  store: StoreName
+  key: string
+  value: unknown
+  /**
+   * "put" (default) creates or replaces. "add" only creates: if a record with this
+   * key already exists the WHOLE transaction fails and nothing is saved.
+   * "delete" removes the record (value is ignored).
+   */
+  mode?: 'put' | 'add' | 'delete'
+}
+
 /** Writes several records across stores in ONE transaction: all succeed or none do. */
-export async function putRecordsAtomically(
-  writes: { store: StoreName; key: string; value: unknown }[],
-): Promise<void> {
+export async function putRecordsAtomically(writes: AtomicWrite[]): Promise<void> {
   if (writes.length === 0) return
   const db = await openDatabase()
   const storeNames = [...new Set(writes.map((w) => w.store))]
   const tx = db.transaction(storeNames, 'readwrite')
-  for (const w of writes) tx.objectStore(w.store).put(w.value, w.key)
+  let firstError: Error | null = null
+  for (const w of writes) {
+    const store = tx.objectStore(w.store)
+    const request =
+      w.mode === 'add' ? store.add(w.value, w.key) : w.mode === 'delete' ? store.delete(w.key) : store.put(w.value, w.key)
+    request.onerror = () => {
+      // Remember why it failed; the error still aborts the whole transaction.
+      firstError ??= request.error ?? new Error(`Could not save ${w.store}/${w.key}`)
+    }
+  }
   await new Promise<void>((resolve, reject) => {
+    const fail = () => reject(firstError ?? tx.error ?? new Error('Saving failed'))
     tx.oncomplete = () => resolve()
-    tx.onerror = () => reject(tx.error)
-    tx.onabort = () => reject(tx.error ?? new Error('Transaction aborted'))
+    tx.onerror = fail
+    tx.onabort = fail
   })
 }
 
@@ -126,6 +150,27 @@ export async function clearAllStores(): Promise<void> {
   const db = await openDatabase()
   const tx = db.transaction([...STORES], 'readwrite')
   for (const name of STORES) tx.objectStore(name).clear()
+  await new Promise<void>((resolve, reject) => {
+    tx.oncomplete = () => resolve()
+    tx.onerror = () => reject(tx.error)
+    tx.onabort = () => reject(tx.error ?? new Error('Transaction aborted'))
+  })
+}
+
+/**
+ * Replaces the whole contents of some stores in ONE transaction (used when
+ * cloud sync writes the merged progress back to the device).
+ */
+export async function replaceStoresAtomically(contents: Partial<Record<StoreName, { key: string; value: unknown }[]>>): Promise<void> {
+  const names = Object.keys(contents) as StoreName[]
+  if (names.length === 0) return
+  const db = await openDatabase()
+  const tx = db.transaction(names, 'readwrite')
+  for (const name of names) {
+    const store = tx.objectStore(name)
+    store.clear()
+    for (const { key, value } of contents[name]!) store.put(value, key)
+  }
   await new Promise<void>((resolve, reject) => {
     tx.oncomplete = () => resolve()
     tx.onerror = () => reject(tx.error)

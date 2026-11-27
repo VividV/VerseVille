@@ -33,7 +33,7 @@ export function OnboardingScreen() {
   }
 
   return (
-    <div className="min-h-dvh bg-paper">
+    <main className="min-h-dvh bg-paper">
       <form onSubmit={onSubmit} className="mx-auto flex max-w-md flex-col gap-5 px-5 py-8" noValidate>
         <header className="text-center">
           <span className="text-5xl" aria-hidden="true">
@@ -79,6 +79,6 @@ export function OnboardingScreen() {
           {saving ? 'Preparing your garden…' : 'Enter My Garden'}
         </Button>
       </form>
-    </div>
+    </main>
   )
 }

@@ -1,0 +1,20 @@
+[
+  { "id": "flower_bed", "name": "Flower Bed", "category": "decoration", "description": "A bright bed of flowers.", "coinCost": 20, "seedCost": 1, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "flowerBed" },
+  { "id": "bench", "name": "Garden Bench", "category": "decoration", "description": "A place to sit and reflect.", "coinCost": 30, "seedCost": 0, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "bench" },
+  { "id": "lantern", "name": "Lantern", "category": "decoration", "description": "A warm light for evening walks.", "coinCost": 25, "seedCost": 0, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "lantern" },
+  { "id": "birdbath", "name": "Birdbath", "category": "decoration", "description": "Little visitors love it.", "coinCost": 40, "seedCost": 0, "unlockLevel": 2, "width": 1, "height": 1, "isUnique": false, "art": "birdbath" },
+  { "id": "verse_sign", "name": "Verse Signpost", "category": "decoration", "description": "A wooden sign pointing the way.", "coinCost": 35, "seedCost": 0, "unlockLevel": 2, "width": 1, "height": 1, "isUnique": false, "art": "signpost" },
+  { "id": "beehive", "name": "Beehive", "category": "decoration", "description": "Busy bees and sweet honey.", "coinCost": 60, "seedCost": 1, "unlockLevel": 3, "width": 1, "height": 1, "isUnique": false, "art": "beehive" },
+  { "id": "fountain", "name": "Fountain", "category": "decoration", "description": "Living water, sparkling in the sun.", "coinCost": 150, "seedCost": 0, "unlockLevel": 3, "width": 1, "height": 1, "isUnique": false, "art": "fountain" },
+
+  { "id": "sunflower", "name": "Sunflower", "category": "plant", "description": "Always turning toward the light.", "coinCost": 10, "seedCost": 1, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "sunflower" },
+  { "id": "lavender", "name": "Lavender", "category": "plant", "description": "Soft purple and sweet-smelling.", "coinCost": 12, "seedCost": 1, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "lavender" },
+  { "id": "rose_bush", "name": "Rose Bush", "category": "plant", "description": "A classic garden favourite.", "coinCost": 15, "seedCost": 1, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "roseBush" },
+  { "id": "vegetable_patch", "name": "Vegetable Patch", "category": "plant", "description": "Good things growing.", "coinCost": 30, "seedCost": 2, "unlockLevel": 2, "width": 1, "height": 1, "isUnique": false, "art": "vegetables" },
+  { "id": "olive_tree", "name": "Olive Tree", "category": "plant", "description": "A sign of peace.", "coinCost": 40, "seedCost": 2, "unlockLevel": 2, "width": 1, "height": 1, "isUnique": false, "art": "oliveTree" },
+  { "id": "fig_tree", "name": "Fig Tree", "category": "plant", "description": "Broad leaves and sweet fruit.", "coinCost": 50, "seedCost": 2, "unlockLevel": 3, "width": 1, "height": 1, "isUnique": false, "art": "figTree" },
+
+  { "id": "stone_path", "name": "Stone Path", "category": "path", "description": "A sturdy garden path.", "coinCost": 5, "seedCost": 0, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "stonePath" },
+  { "id": "stepping_stones", "name": "Stepping Stones", "category": "path", "description": "One step at a time.", "coinCost": 6, "seedCost": 0, "unlockLevel": 1, "width": 1, "height": 1, "isUnique": false, "art": "steppingStones" },
+  { "id": "brick_path", "name": "Brick Path", "category": "path", "description": "Warm red bricks.", "coinCost": 8, "seedCost": 0, "unlockLevel": 2, "width": 1, "height": 1, "isUnique": false, "art": "brickPath" }
+]

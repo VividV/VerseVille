@@ -1,0 +1,10 @@
+[
+  { "id": "small_cottage", "name": "Small Cottage", "category": "building", "description": "Your home in VerseVille.", "coinCost": 100, "seedCost": 0, "unlockLevel": 1, "width": 2, "height": 2, "isUnique": true, "art": "cottage" },
+  { "id": "scripture_tree", "name": "Scripture Tree", "category": "building", "description": "The heart of your garden. Tap it to keep learning.", "coinCost": 0, "seedCost": 0, "unlockLevel": 1, "width": 2, "height": 2, "isUnique": true, "art": "scriptureTree", "notForSale": true },
+  { "id": "well", "name": "Village Well", "category": "building", "description": "Cool, fresh water for the whole garden.", "coinCost": 120, "seedCost": 0, "unlockLevel": 2, "width": 1, "height": 1, "isUnique": true, "art": "well" },
+  { "id": "barn", "name": "Red Barn", "category": "building", "description": "A cosy barn for tools and harvests.", "coinCost": 200, "seedCost": 0, "unlockLevel": 2, "width": 2, "height": 2, "isUnique": true, "art": "barn" },
+  { "id": "chapel", "name": "Little Chapel", "category": "building", "description": "A quiet place to pray and give thanks.", "coinCost": 300, "seedCost": 2, "unlockLevel": 3, "width": 2, "height": 2, "isUnique": true, "art": "chapel" },
+  { "id": "bakery", "name": "Bakery", "category": "building", "description": "Warm bread to share with neighbours.", "coinCost": 250, "seedCost": 0, "unlockLevel": 4, "width": 2, "height": 2, "isUnique": true, "art": "bakery" },
+  { "id": "windmill", "name": "Windmill", "category": "building", "description": "Turns gently in the breeze.", "coinCost": 400, "seedCost": 0, "unlockLevel": 5, "width": 2, "height": 2, "isUnique": true, "art": "windmill" },
+  { "id": "greenhouse", "name": "Greenhouse", "category": "building", "description": "Where the most delicate plants grow.", "coinCost": 350, "seedCost": 3, "unlockLevel": 6, "width": 2, "height": 2, "isUnique": true, "art": "greenhouse" }
+]

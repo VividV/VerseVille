@@ -1,0 +1,7 @@
+[
+  { "id": "complete_daily_goal", "name": "Today's Scripture Goal", "description": "Complete today's scripture goal.", "eventType": "daily_goal_completed", "target": 1, "coinReward": 10, "xpReward": 20, "icon": "🎯" },
+  { "id": "recall_challenge", "name": "From the Heart", "description": "Complete one Verse Recall challenge.", "eventType": "recall_completed", "target": 1, "coinReward": 10, "xpReward": 15, "icon": "🧠" },
+  { "id": "review_two_scriptures", "name": "Keep the Word Growing", "description": "Review two scriptures.", "eventType": "scripture_review_completed", "target": 2, "coinReward": 15, "xpReward": 10, "icon": "💧" },
+  { "id": "review_one_scripture", "name": "Water Your Garden", "description": "Review one scripture.", "eventType": "scripture_review_completed", "target": 1, "coinReward": 10, "xpReward": 10, "icon": "💧" },
+  { "id": "learn_one_scripture", "name": "Plant a New Seed", "description": "Learn one scripture.", "eventType": "scripture_learned", "target": 1, "coinReward": 10, "xpReward": 15, "icon": "🌱" }
+]

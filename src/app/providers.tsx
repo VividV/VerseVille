@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { useSettingsStore } from '../store/settingsStore'
+import { useAccountStore } from '../store/accountStore'
 import { LoadingState } from '../components/common/LoadingState'
 import { Button } from '../components/common/Button'
 
@@ -25,6 +26,11 @@ export function AppProviders({ children }: { children: ReactNode }) {
   useEffect(() => {
     void hydrate()
   }, [hydrate])
+
+  // Once progress is loaded, reconnect a signed-in account and sync in the background.
+  useEffect(() => {
+    if (status === 'ready') void useAccountStore.getState().init()
+  }, [status])
 
   return (
     <>

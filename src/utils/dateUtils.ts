@@ -29,3 +29,17 @@ export function localDaysBetween(from: Date, to: Date): number {
   const b = new Date(to.getFullYear(), to.getMonth(), to.getDate())
   return Math.round((b.getTime() - a.getTime()) / 86_400_000)
 }
+
+/** Friendly description of a review date: "Today", "Tomorrow", "In 5 days", or "Overdue". */
+export function describeReviewDate(iso: string, now: Date = new Date()): string {
+  const days = localDaysBetween(now, new Date(iso))
+  if (days < 0) return 'Overdue'
+  if (days === 0) return 'Today'
+  if (days === 1) return 'Tomorrow'
+  return `In ${days} days`
+}
+
+/** Midnight at the start of the local calendar day. */
+export function startOfLocalDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}

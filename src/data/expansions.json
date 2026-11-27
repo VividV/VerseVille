@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Meadow", "rows": 2, "requiredLevel": 3, "requiredMastered": 10, "coinCost": 100 },
+  { "id": 2, "name": "Orchard", "rows": 2, "requiredLevel": 5, "requiredMastered": 25, "coinCost": 250 },
+  { "id": 3, "name": "Riverside", "rows": 2, "requiredLevel": 8, "requiredMastered": 50, "coinCost": 500 }
+]

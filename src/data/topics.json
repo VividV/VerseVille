@@ -1,0 +1,172 @@
+[
+  {
+    "id": "trust",
+    "name": "Trust",
+    "icon": "🤲"
+  },
+  {
+    "id": "love",
+    "name": "Love",
+    "icon": "❤️"
+  },
+  {
+    "id": "salvation",
+    "name": "Salvation",
+    "icon": "✝️"
+  },
+  {
+    "id": "faith",
+    "name": "Faith",
+    "icon": "🕯️"
+  },
+  {
+    "id": "hope",
+    "name": "Hope",
+    "icon": "🌅"
+  },
+  {
+    "id": "peace",
+    "name": "Peace",
+    "icon": "🕊️"
+  },
+  {
+    "id": "strength",
+    "name": "Strength",
+    "icon": "💪"
+  },
+  {
+    "id": "courage",
+    "name": "Courage",
+    "icon": "🦁"
+  },
+  {
+    "id": "fear",
+    "name": "Overcoming fear",
+    "icon": "🛡️"
+  },
+  {
+    "id": "anxiety",
+    "name": "Anxiety & worry",
+    "icon": "🌧️"
+  },
+  {
+    "id": "prayer",
+    "name": "Prayer",
+    "icon": "🙏"
+  },
+  {
+    "id": "wisdom",
+    "name": "Wisdom",
+    "icon": "🦉"
+  },
+  {
+    "id": "guidance",
+    "name": "Guidance",
+    "icon": "🧭"
+  },
+  {
+    "id": "scripture",
+    "name": "God's Word",
+    "icon": "📜"
+  },
+  {
+    "id": "joy",
+    "name": "Joy",
+    "icon": "☀️"
+  },
+  {
+    "id": "gratitude",
+    "name": "Gratitude",
+    "icon": "🌻"
+  },
+  {
+    "id": "grace",
+    "name": "Grace",
+    "icon": "🎁"
+  },
+  {
+    "id": "sin",
+    "name": "Sin",
+    "icon": "⚖️"
+  },
+  {
+    "id": "forgiveness",
+    "name": "Forgiveness",
+    "icon": "🤍"
+  },
+  {
+    "id": "transformation",
+    "name": "New life",
+    "icon": "🦋"
+  },
+  {
+    "id": "refuge",
+    "name": "Refuge",
+    "icon": "🏰"
+  },
+  {
+    "id": "rest",
+    "name": "Rest",
+    "icon": "🌙"
+  },
+  {
+    "id": "provision",
+    "name": "Provision",
+    "icon": "🌾"
+  },
+  {
+    "id": "priorities",
+    "name": "Priorities",
+    "icon": "🎯"
+  },
+  {
+    "id": "contentment",
+    "name": "Contentment",
+    "icon": "🍃"
+  },
+  {
+    "id": "faithfulness",
+    "name": "God's faithfulness",
+    "icon": "⛰️"
+  },
+  {
+    "id": "obedience",
+    "name": "Obedience",
+    "icon": "👣"
+  },
+  {
+    "id": "kindness",
+    "name": "Kindness",
+    "icon": "🤝"
+  },
+  {
+    "id": "witness",
+    "name": "Sharing faith",
+    "icon": "💡"
+  },
+  {
+    "id": "character",
+    "name": "Character",
+    "icon": "🌳"
+  },
+  {
+    "id": "temptation",
+    "name": "Temptation",
+    "icon": "🚪"
+  },
+  {
+    "id": "identity",
+    "name": "Identity",
+    "icon": "🪞"
+  },
+  {
+    "id": "creation",
+    "name": "Creation",
+    "icon": "🌍"
+  },
+  {
+    "id": "work",
+    "name": "Work",
+    "icon": "🛠️"
+  }
+]

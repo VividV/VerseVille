@@ -1,0 +1,12 @@
+[
+  { "level": 1, "title": "Seedling" },
+  { "level": 2, "title": "Sprout" },
+  { "level": 3, "title": "Sapling" },
+  { "level": 4, "title": "Gardener" },
+  { "level": 5, "title": "Green Thumb" },
+  { "level": 6, "title": "Orchard Keeper" },
+  { "level": 7, "title": "Vinedresser" },
+  { "level": 8, "title": "Village Planter" },
+  { "level": 9, "title": "Harvest Helper" },
+  { "level": 10, "title": "Faithful Steward" }
+]

@@ -1,0 +1,1442 @@
+[
+  {
+    "id": "psalm-23-1-kjv",
+    "book": "Psalms",
+    "chapter": 23,
+    "verse": 1,
+    "reference": "Psalm 23:1",
+    "translation": "KJV",
+    "text": "The LORD is my shepherd; I shall not want.",
+    "topicIds": [
+      "trust",
+      "provision",
+      "peace"
+    ],
+    "explanation": "David pictures God as a shepherd who personally cares for his sheep. Because the Lord leads and provides, those who follow him will not lack what they truly need.",
+    "relatedScriptureIds": [
+      "john-10-11-kjv",
+      "isaiah-26-3-kjv",
+      "proverbs-3-5-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 9,
+    "isActive": true
+  },
+  {
+    "id": "john-3-16-kjv",
+    "book": "John",
+    "chapter": 3,
+    "verse": 16,
+    "reference": "John 3:16",
+    "translation": "KJV",
+    "text": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
+    "topicIds": [
+      "love",
+      "salvation"
+    ],
+    "explanation": "Jesus explains the heart of the gospel: God's love for the world moved him to give his Son, so that everyone who believes in him receives eternal life instead of perishing.",
+    "relatedScriptureIds": [
+      "romans-5-8-kjv",
+      "john-10-11-kjv",
+      "2-corinthians-5-17-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 25,
+    "isActive": true
+  },
+  {
+    "id": "proverbs-3-5-kjv",
+    "book": "Proverbs",
+    "chapter": 3,
+    "verse": 5,
+    "reference": "Proverbs 3:5",
+    "translation": "KJV",
+    "text": "Trust in the LORD with all thine heart; and lean not unto thine own understanding.",
+    "topicIds": [
+      "trust",
+      "wisdom"
+    ],
+    "explanation": "Trust God wholeheartedly rather than relying only on your own limited understanding. Our view is partial; God sees the whole picture.",
+    "relatedScriptureIds": [
+      "proverbs-3-6-kjv",
+      "psalm-23-1-kjv",
+      "romans-8-28-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 15,
+    "isActive": true
+  },
+  {
+    "id": "proverbs-3-6-kjv",
+    "book": "Proverbs",
+    "chapter": 3,
+    "verse": 6,
+    "reference": "Proverbs 3:6",
+    "translation": "KJV",
+    "text": "In all thy ways acknowledge him, and he shall direct thy paths.",
+    "topicIds": [
+      "trust",
+      "guidance",
+      "wisdom"
+    ],
+    "explanation": "Continuing from verse 5: when we honour God in every part of life, he guides our steps and makes our way straight.",
+    "relatedScriptureIds": [
+      "proverbs-3-5-kjv",
+      "psalm-23-1-kjv",
+      "romans-8-28-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 12,
+    "isActive": true
+  },
+  {
+    "id": "philippians-4-13-kjv",
+    "book": "Philippians",
+    "chapter": 4,
+    "verse": 13,
+    "reference": "Philippians 4:13",
+    "translation": "KJV",
+    "text": "I can do all things through Christ which strengtheneth me.",
+    "topicIds": [
+      "strength",
+      "contentment"
+    ],
+    "explanation": "Paul wrote this while learning to be content in plenty and in need. His strength to face any circumstance came from Christ, not from himself.",
+    "relatedScriptureIds": [
+      "isaiah-41-10-kjv",
+      "joshua-1-9-kjv",
+      "psalm-46-1-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 10,
+    "isActive": true
+  },
+  {
+    "id": "romans-8-28-kjv",
+    "book": "Romans",
+    "chapter": 8,
+    "verse": 28,
+    "reference": "Romans 8:28",
+    "translation": "KJV",
+    "text": "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+    "topicIds": [
+      "hope",
+      "trust"
+    ],
+    "explanation": "Paul assures believers that God is at work in every circumstance, weaving all things together for the good of those who love him and are called by him.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 25,
+    "isActive": true
+  },
+  {
+    "id": "jeremiah-29-11-kjv",
+    "book": "Jeremiah",
+    "chapter": 29,
+    "verse": 11,
+    "reference": "Jeremiah 29:11",
+    "translation": "KJV",
+    "text": "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+    "topicIds": [
+      "hope",
+      "guidance"
+    ],
+    "explanation": "God spoke these words to Israel in exile in Babylon. Even in a hard season, his intentions toward his people were for peace and a hopeful future.",
+    "relatedScriptureIds": [
+      "proverbs-3-6-kjv",
+      "romans-8-28-kjv",
+      "psalm-119-105-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 26,
+    "isActive": true
+  },
+  {
+    "id": "isaiah-41-10-kjv",
+    "book": "Isaiah",
+    "chapter": 41,
+    "verse": 10,
+    "reference": "Isaiah 41:10",
+    "translation": "KJV",
+    "text": "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
+    "topicIds": [
+      "courage",
+      "strength",
+      "fear"
+    ],
+    "explanation": "God tells his people not to be afraid, because he is with them. He promises to strengthen, help and uphold them.",
+    "relatedScriptureIds": [
+      "joshua-1-9-kjv",
+      "2-timothy-1-7-kjv",
+      "philippians-4-13-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 37,
+    "isActive": true
+  },
+  {
+    "id": "joshua-1-9-kjv",
+    "book": "Joshua",
+    "chapter": 1,
+    "verse": 9,
+    "reference": "Joshua 1:9",
+    "translation": "KJV",
+    "text": "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",
+    "topicIds": [
+      "courage",
+      "strength"
+    ],
+    "explanation": "As Joshua prepared to lead Israel into the promised land, God commanded him to be strong and brave, because God would be with him wherever he went.",
+    "relatedScriptureIds": [
+      "isaiah-41-10-kjv",
+      "philippians-4-13-kjv",
+      "psalm-46-1-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 30,
+    "isActive": true
+  },
+  {
+    "id": "psalm-46-1-kjv",
+    "book": "Psalms",
+    "chapter": 46,
+    "verse": 1,
+    "reference": "Psalm 46:1",
+    "translation": "KJV",
+    "text": "God is our refuge and strength, a very present help in trouble.",
+    "topicIds": [
+      "strength",
+      "refuge"
+    ],
+    "explanation": "In times of trouble God is a safe shelter and a source of strength, and he is near and ready to help.",
+    "relatedScriptureIds": [
+      "philippians-4-13-kjv",
+      "isaiah-41-10-kjv",
+      "joshua-1-9-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 12,
+    "isActive": true
+  },
+  {
+    "id": "psalm-119-105-kjv",
+    "book": "Psalms",
+    "chapter": 119,
+    "verse": 105,
+    "reference": "Psalm 119:105",
+    "translation": "KJV",
+    "text": "Thy word is a lamp unto my feet, and a light unto my path.",
+    "topicIds": [
+      "scripture",
+      "guidance"
+    ],
+    "explanation": "God's word is like a lamp in the dark: it shows the next step and lights up the path ahead.",
+    "relatedScriptureIds": [
+      "proverbs-3-6-kjv",
+      "jeremiah-29-11-kjv",
+      "john-1-1-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 14,
+    "isActive": true
+  },
+  {
+    "id": "matthew-11-28-kjv",
+    "book": "Matthew",
+    "chapter": 11,
+    "verse": 28,
+    "reference": "Matthew 11:28",
+    "translation": "KJV",
+    "text": "Come unto me, all ye that labour and are heavy laden, and I will give you rest.",
+    "topicIds": [
+      "rest",
+      "peace"
+    ],
+    "explanation": "Jesus invites everyone who is weary and weighed down to come to him and receive rest.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "philippians-4-7-kjv",
+      "galatians-5-22-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 17,
+    "isActive": true
+  },
+  {
+    "id": "matthew-6-33-kjv",
+    "book": "Matthew",
+    "chapter": 6,
+    "verse": 33,
+    "reference": "Matthew 6:33",
+    "translation": "KJV",
+    "text": "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",
+    "topicIds": [
+      "provision",
+      "priorities"
+    ],
+    "explanation": "Rather than being consumed by worry about daily needs, Jesus teaches us to make God's kingdom our first priority, trusting him to provide.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 20,
+    "isActive": true
+  },
+  {
+    "id": "philippians-4-6-kjv",
+    "book": "Philippians",
+    "chapter": 4,
+    "verse": 6,
+    "reference": "Philippians 4:6",
+    "translation": "KJV",
+    "text": "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God.",
+    "topicIds": [
+      "prayer",
+      "anxiety"
+    ],
+    "explanation": "In KJV English, \"careful\" means anxious. Instead of worrying about anything, bring every need to God in prayer, with thanksgiving.",
+    "relatedScriptureIds": [
+      "philippians-4-7-kjv",
+      "1-peter-5-7-kjv",
+      "james-1-5-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 22,
+    "isActive": true
+  },
+  {
+    "id": "philippians-4-7-kjv",
+    "book": "Philippians",
+    "chapter": 4,
+    "verse": 7,
+    "reference": "Philippians 4:7",
+    "translation": "KJV",
+    "text": "And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+    "topicIds": [
+      "peace",
+      "prayer"
+    ],
+    "explanation": "Following verse 6: those who pray this way receive God's peace, which is greater than we can understand and guards our hearts and minds in Christ.",
+    "relatedScriptureIds": [
+      "philippians-4-6-kjv",
+      "psalm-23-1-kjv",
+      "matthew-11-28-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 18,
+    "isActive": true
+  },
+  {
+    "id": "1-peter-5-7-kjv",
+    "book": "1 Peter",
+    "chapter": 5,
+    "verse": 7,
+    "reference": "1 Peter 5:7",
+    "translation": "KJV",
+    "text": "Casting all your care upon him; for he careth for you.",
+    "topicIds": [
+      "anxiety",
+      "trust"
+    ],
+    "explanation": "We can hand every worry over to God, because he genuinely cares for us.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 11,
+    "isActive": true
+  },
+  {
+    "id": "romans-12-2-kjv",
+    "book": "Romans",
+    "chapter": 12,
+    "verse": 2,
+    "reference": "Romans 12:2",
+    "translation": "KJV",
+    "text": "And be not conformed to this world: but be ye transformed by the renewing of your mind, that ye may prove what is that good, and acceptable, and perfect, will of God.",
+    "topicIds": [
+      "transformation",
+      "wisdom"
+    ],
+    "explanation": "Don't simply copy the patterns of the world. Let God renew the way you think, so you can recognise and follow his good will.",
+    "relatedScriptureIds": [
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv",
+      "2-corinthians-5-17-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 32,
+    "isActive": true
+  },
+  {
+    "id": "2-corinthians-5-17-kjv",
+    "book": "2 Corinthians",
+    "chapter": 5,
+    "verse": 17,
+    "reference": "2 Corinthians 5:17",
+    "translation": "KJV",
+    "text": "Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.",
+    "topicIds": [
+      "salvation",
+      "transformation"
+    ],
+    "explanation": "Anyone who is in Christ is made new. The old life has passed and a new one has begun.",
+    "relatedScriptureIds": [
+      "john-3-16-kjv",
+      "romans-12-2-kjv",
+      "galatians-2-20-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 23,
+    "isActive": true
+  },
+  {
+    "id": "galatians-2-20-kjv",
+    "book": "Galatians",
+    "chapter": 2,
+    "verse": 20,
+    "reference": "Galatians 2:20",
+    "translation": "KJV",
+    "text": "I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.",
+    "topicIds": [
+      "faith",
+      "salvation"
+    ],
+    "explanation": "Paul describes being united with Christ: his old self was crucified with Christ, and the life he now lives, he lives by the faith of the Son of God, who loved him and gave himself for him.",
+    "relatedScriptureIds": [
+      "ephesians-2-8-kjv",
+      "john-14-6-kjv",
+      "romans-10-9-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 44,
+    "isActive": true
+  },
+  {
+    "id": "ephesians-2-8-kjv",
+    "book": "Ephesians",
+    "chapter": 2,
+    "verse": 8,
+    "reference": "Ephesians 2:8",
+    "translation": "KJV",
+    "text": "For by grace are ye saved through faith; and that not of yourselves: it is the gift of God:",
+    "topicIds": [
+      "grace",
+      "salvation",
+      "faith"
+    ],
+    "explanation": "Salvation is God's gift. We are saved by his grace through faith, not by anything we produce ourselves.",
+    "relatedScriptureIds": [
+      "ephesians-2-9-kjv",
+      "galatians-2-20-kjv",
+      "john-14-6-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 19,
+    "isActive": true
+  },
+  {
+    "id": "ephesians-2-9-kjv",
+    "book": "Ephesians",
+    "chapter": 2,
+    "verse": 9,
+    "reference": "Ephesians 2:9",
+    "translation": "KJV",
+    "text": "Not of works, lest any man should boast.",
+    "topicIds": [
+      "grace",
+      "salvation"
+    ],
+    "explanation": "Continuing from verse 8: salvation does not come from our works, so no one can boast about earning it.",
+    "relatedScriptureIds": [
+      "ephesians-2-8-kjv",
+      "john-3-16-kjv",
+      "2-corinthians-5-17-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 8,
+    "isActive": true
+  },
+  {
+    "id": "romans-3-23-kjv",
+    "book": "Romans",
+    "chapter": 3,
+    "verse": 23,
+    "reference": "Romans 3:23",
+    "translation": "KJV",
+    "text": "For all have sinned, and come short of the glory of God;",
+    "topicIds": [
+      "sin",
+      "salvation"
+    ],
+    "explanation": "Everyone has sinned and fallen short of God's glory. No one is righteous enough on their own.",
+    "relatedScriptureIds": [
+      "romans-6-23-kjv",
+      "john-3-16-kjv",
+      "2-corinthians-5-17-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 12,
+    "isActive": true
+  },
+  {
+    "id": "romans-6-23-kjv",
+    "book": "Romans",
+    "chapter": 6,
+    "verse": 23,
+    "reference": "Romans 6:23",
+    "translation": "KJV",
+    "text": "For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.",
+    "topicIds": [
+      "sin",
+      "salvation"
+    ],
+    "explanation": "Sin leads to death, but God offers eternal life as a free gift through Jesus Christ.",
+    "relatedScriptureIds": [
+      "romans-3-23-kjv",
+      "john-3-16-kjv",
+      "2-corinthians-5-17-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 20,
+    "isActive": true
+  },
+  {
+    "id": "romans-5-8-kjv",
+    "book": "Romans",
+    "chapter": 5,
+    "verse": 8,
+    "reference": "Romans 5:8",
+    "translation": "KJV",
+    "text": "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.",
+    "topicIds": [
+      "love",
+      "salvation"
+    ],
+    "explanation": "God showed his love by Christ dying for us while we were still sinners, before we had done anything to deserve it.",
+    "relatedScriptureIds": [
+      "john-3-16-kjv",
+      "john-10-11-kjv",
+      "2-corinthians-5-17-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 18,
+    "isActive": true
+  },
+  {
+    "id": "1-john-1-9-kjv",
+    "book": "1 John",
+    "chapter": 1,
+    "verse": 9,
+    "reference": "1 John 1:9",
+    "translation": "KJV",
+    "text": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.",
+    "topicIds": [
+      "forgiveness"
+    ],
+    "explanation": "When we honestly confess our sins, God is faithful and just to forgive us and to cleanse us from all unrighteousness.",
+    "relatedScriptureIds": [
+      "psalm-51-10-kjv",
+      "ephesians-4-32-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 22,
+    "isActive": true
+  },
+  {
+    "id": "john-14-6-kjv",
+    "book": "John",
+    "chapter": 14,
+    "verse": 6,
+    "reference": "John 14:6",
+    "translation": "KJV",
+    "text": "Jesus saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me.",
+    "topicIds": [
+      "salvation",
+      "faith"
+    ],
+    "explanation": "Jesus declares that he is the way, the truth and the life, and that he is the way to the Father.",
+    "relatedScriptureIds": [
+      "galatians-2-20-kjv",
+      "ephesians-2-8-kjv",
+      "romans-10-9-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 22,
+    "isActive": true
+  },
+  {
+    "id": "john-1-1-kjv",
+    "book": "John",
+    "chapter": 1,
+    "verse": 1,
+    "reference": "John 1:1",
+    "translation": "KJV",
+    "text": "In the beginning was the Word, and the Word was with God, and the Word was God.",
+    "topicIds": [
+      "scripture",
+      "faith"
+    ],
+    "explanation": "John opens his gospel by describing Jesus as the eternal Word, who was with God and was God from the beginning.",
+    "relatedScriptureIds": [
+      "psalm-119-105-kjv",
+      "galatians-2-20-kjv",
+      "ephesians-2-8-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 17,
+    "isActive": true
+  },
+  {
+    "id": "hebrews-11-1-kjv",
+    "book": "Hebrews",
+    "chapter": 11,
+    "verse": 1,
+    "reference": "Hebrews 11:1",
+    "translation": "KJV",
+    "text": "Now faith is the substance of things hoped for, the evidence of things not seen.",
+    "topicIds": [
+      "faith",
+      "hope"
+    ],
+    "explanation": "Faith is confident trust in what God has promised, even before we can see it fulfilled.",
+    "relatedScriptureIds": [
+      "romans-8-28-kjv",
+      "jeremiah-29-11-kjv",
+      "galatians-2-20-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 15,
+    "isActive": true
+  },
+  {
+    "id": "hebrews-4-12-kjv",
+    "book": "Hebrews",
+    "chapter": 4,
+    "verse": 12,
+    "reference": "Hebrews 4:12",
+    "translation": "KJV",
+    "text": "For the word of God is quick, and powerful, and sharper than any twoedged sword, piercing even to the dividing asunder of soul and spirit, and of the joints and marrow, and is a discerner of the thoughts and intents of the heart.",
+    "topicIds": [
+      "scripture"
+    ],
+    "explanation": "In KJV English, \"quick\" means living. God's word is alive and powerful; it reaches deep inside us and reveals our true thoughts and intentions.",
+    "relatedScriptureIds": [
+      "psalm-119-105-kjv",
+      "john-1-1-kjv",
+      "2-timothy-3-16-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 43,
+    "isActive": true
+  },
+  {
+    "id": "2-timothy-3-16-kjv",
+    "book": "2 Timothy",
+    "chapter": 3,
+    "verse": 16,
+    "reference": "2 Timothy 3:16",
+    "translation": "KJV",
+    "text": "All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness:",
+    "topicIds": [
+      "scripture",
+      "wisdom"
+    ],
+    "explanation": "All scripture comes from God and is useful for teaching, correcting and training us in right living.",
+    "relatedScriptureIds": [
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv",
+      "psalm-119-105-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 21,
+    "isActive": true
+  },
+  {
+    "id": "isaiah-40-31-kjv",
+    "book": "Isaiah",
+    "chapter": 40,
+    "verse": 31,
+    "reference": "Isaiah 40:31",
+    "translation": "KJV",
+    "text": "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
+    "topicIds": [
+      "strength",
+      "hope"
+    ],
+    "explanation": "Those who wait on the Lord and put their hope in him will have their strength renewed, like eagles rising on the wind.",
+    "relatedScriptureIds": [
+      "philippians-4-13-kjv",
+      "romans-8-28-kjv",
+      "jeremiah-29-11-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 33,
+    "isActive": true
+  },
+  {
+    "id": "psalm-37-4-kjv",
+    "book": "Psalms",
+    "chapter": 37,
+    "verse": 4,
+    "reference": "Psalm 37:4",
+    "translation": "KJV",
+    "text": "Delight thyself also in the LORD; and he shall give thee the desires of thine heart.",
+    "topicIds": [
+      "joy",
+      "trust"
+    ],
+    "explanation": "Find your delight in the Lord. As our hearts are shaped by delighting in him, he gives us the desires of our heart.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 16,
+    "isActive": true
+  },
+  {
+    "id": "psalm-118-24-kjv",
+    "book": "Psalms",
+    "chapter": 118,
+    "verse": 24,
+    "reference": "Psalm 118:24",
+    "translation": "KJV",
+    "text": "This is the day which the LORD hath made; we will rejoice and be glad in it.",
+    "topicIds": [
+      "joy",
+      "gratitude"
+    ],
+    "explanation": "Each day is a gift from God, and a reason to rejoice and be glad.",
+    "relatedScriptureIds": [
+      "psalm-37-4-kjv",
+      "nehemiah-8-10-kjv",
+      "galatians-5-22-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 17,
+    "isActive": true
+  },
+  {
+    "id": "nehemiah-8-10-kjv",
+    "book": "Nehemiah",
+    "chapter": 8,
+    "verse": 10,
+    "reference": "Nehemiah 8:10",
+    "translation": "KJV",
+    "text": "Then he said unto them, Go your way, eat the fat, and drink the sweet, and send portions unto them for whom nothing is prepared: for this day is holy unto our Lord: neither be ye sorry; for the joy of the LORD is your strength.",
+    "topicIds": [
+      "joy",
+      "strength"
+    ],
+    "explanation": "As the people heard God's law read and grieved, Nehemiah encouraged them to celebrate and share, because the joy of the Lord was their strength.",
+    "relatedScriptureIds": [
+      "philippians-4-13-kjv",
+      "isaiah-41-10-kjv",
+      "joshua-1-9-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 46,
+    "isActive": true
+  },
+  {
+    "id": "lamentations-3-22-kjv",
+    "book": "Lamentations",
+    "chapter": 3,
+    "verse": 22,
+    "reference": "Lamentations 3:22",
+    "translation": "KJV",
+    "text": "It is of the LORD’s mercies that we are not consumed, because his compassions fail not.",
+    "topicIds": [
+      "faithfulness",
+      "hope"
+    ],
+    "explanation": "Written after Jerusalem's destruction, this verse holds onto hope: it is because of the Lord's mercies that his people are not consumed, for his compassion does not fail.",
+    "relatedScriptureIds": [
+      "lamentations-3-23-kjv",
+      "romans-8-28-kjv",
+      "jeremiah-29-11-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 16,
+    "isActive": true
+  },
+  {
+    "id": "lamentations-3-23-kjv",
+    "book": "Lamentations",
+    "chapter": 3,
+    "verse": 23,
+    "reference": "Lamentations 3:23",
+    "translation": "KJV",
+    "text": "They are new every morning: great is thy faithfulness.",
+    "topicIds": [
+      "faithfulness",
+      "hope"
+    ],
+    "explanation": "Continuing from verse 22: God's compassion is new every morning, and his faithfulness is great.",
+    "relatedScriptureIds": [
+      "lamentations-3-22-kjv",
+      "romans-8-28-kjv",
+      "jeremiah-29-11-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 9,
+    "isActive": true
+  },
+  {
+    "id": "micah-6-8-kjv",
+    "book": "Micah",
+    "chapter": 6,
+    "verse": 8,
+    "reference": "Micah 6:8",
+    "translation": "KJV",
+    "text": "He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?",
+    "topicIds": [
+      "obedience",
+      "kindness"
+    ],
+    "explanation": "God has made clear what he asks: to do justly, to love mercy, and to walk humbly with him.",
+    "relatedScriptureIds": [
+      "matthew-22-37-kjv",
+      "matthew-28-19-kjv",
+      "colossians-3-23-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 32,
+    "isActive": true
+  },
+  {
+    "id": "matthew-22-37-kjv",
+    "book": "Matthew",
+    "chapter": 22,
+    "verse": 37,
+    "reference": "Matthew 22:37",
+    "translation": "KJV",
+    "text": "Jesus said unto him, Thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy mind.",
+    "topicIds": [
+      "love",
+      "obedience"
+    ],
+    "explanation": "Asked for the greatest commandment, Jesus answered: love the Lord your God with all your heart, soul and mind.",
+    "relatedScriptureIds": [
+      "john-3-16-kjv",
+      "romans-5-8-kjv",
+      "micah-6-8-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 25,
+    "isActive": true
+  },
+  {
+    "id": "matthew-5-16-kjv",
+    "book": "Matthew",
+    "chapter": 5,
+    "verse": 16,
+    "reference": "Matthew 5:16",
+    "translation": "KJV",
+    "text": "Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.",
+    "topicIds": [
+      "witness"
+    ],
+    "explanation": "Let the good you do shine like a light before others, so that they give glory to God.",
+    "relatedScriptureIds": [
+      "matthew-28-19-kjv",
+      "acts-1-8-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 22,
+    "isActive": true
+  },
+  {
+    "id": "matthew-28-19-kjv",
+    "book": "Matthew",
+    "chapter": 28,
+    "verse": 19,
+    "reference": "Matthew 28:19",
+    "translation": "KJV",
+    "text": "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost:",
+    "topicIds": [
+      "witness",
+      "obedience"
+    ],
+    "explanation": "Jesus sends his followers to make disciples of all nations, baptising them in the name of the Father, the Son and the Holy Spirit.",
+    "relatedScriptureIds": [
+      "micah-6-8-kjv",
+      "matthew-22-37-kjv",
+      "matthew-5-16-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 24,
+    "isActive": true
+  },
+  {
+    "id": "acts-1-8-kjv",
+    "book": "Acts",
+    "chapter": 1,
+    "verse": 8,
+    "reference": "Acts 1:8",
+    "translation": "KJV",
+    "text": "But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judæa, and in Samaria, and unto the uttermost part of the earth.",
+    "topicIds": [
+      "witness",
+      "strength"
+    ],
+    "explanation": "Before ascending, Jesus promised that the Holy Spirit would give his followers power to be his witnesses, from Jerusalem to the ends of the earth.",
+    "relatedScriptureIds": [
+      "philippians-4-13-kjv",
+      "isaiah-41-10-kjv",
+      "joshua-1-9-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 39,
+    "isActive": true
+  },
+  {
+    "id": "galatians-5-22-kjv",
+    "book": "Galatians",
+    "chapter": 5,
+    "verse": 22,
+    "reference": "Galatians 5:22",
+    "translation": "KJV",
+    "text": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,",
+    "topicIds": [
+      "character",
+      "joy",
+      "peace"
+    ],
+    "explanation": "Paul lists the fruit the Holy Spirit grows in a believer's life, beginning with love, joy, peace, longsuffering (patience), gentleness, goodness and faith.",
+    "relatedScriptureIds": [
+      "galatians-5-23-kjv",
+      "romans-15-13-kjv",
+      "psalm-23-1-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 14,
+    "isActive": true
+  },
+  {
+    "id": "galatians-5-23-kjv",
+    "book": "Galatians",
+    "chapter": 5,
+    "verse": 23,
+    "reference": "Galatians 5:23",
+    "translation": "KJV",
+    "text": "Meekness, temperance: against such there is no law.",
+    "topicIds": [
+      "character"
+    ],
+    "explanation": "The list continues with meekness and temperance (self-control). There is no law against qualities like these.",
+    "relatedScriptureIds": [
+      "galatians-5-22-kjv",
+      "1-corinthians-13-4-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 8,
+    "isActive": true
+  },
+  {
+    "id": "1-corinthians-13-4-kjv",
+    "book": "1 Corinthians",
+    "chapter": 13,
+    "verse": 4,
+    "reference": "1 Corinthians 13:4",
+    "translation": "KJV",
+    "text": "Charity suffereth long, and is kind; charity envieth not; charity vaunteth not itself, is not puffed up,",
+    "topicIds": [
+      "love",
+      "character"
+    ],
+    "explanation": "Paul describes what real love looks like: patient, kind, not envious, not boastful and not proud. (The KJV uses the word charity for love.)",
+    "relatedScriptureIds": [
+      "john-3-16-kjv",
+      "romans-5-8-kjv",
+      "matthew-22-37-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 17,
+    "isActive": true
+  },
+  {
+    "id": "1-corinthians-10-13-kjv",
+    "book": "1 Corinthians",
+    "chapter": 10,
+    "verse": 13,
+    "reference": "1 Corinthians 10:13",
+    "translation": "KJV",
+    "text": "There hath no temptation taken you but such as is common to man: but God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape, that ye may be able to bear it.",
+    "topicIds": [
+      "temptation",
+      "faithfulness"
+    ],
+    "explanation": "Every temptation we face is common to people. God is faithful: he will not let us be tempted beyond what we can bear, and he provides a way of escape.",
+    "relatedScriptureIds": [
+      "lamentations-3-22-kjv",
+      "lamentations-3-23-kjv",
+      "deuteronomy-31-6-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 49,
+    "isActive": true
+  },
+  {
+    "id": "james-1-5-kjv",
+    "book": "James",
+    "chapter": 1,
+    "verse": 5,
+    "reference": "James 1:5",
+    "translation": "KJV",
+    "text": "If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",
+    "topicIds": [
+      "wisdom",
+      "prayer"
+    ],
+    "explanation": "If you need wisdom, ask God. He gives generously to all who ask, without scolding them for asking.",
+    "relatedScriptureIds": [
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv",
+      "philippians-4-6-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 26,
+    "isActive": true
+  },
+  {
+    "id": "proverbs-18-10-kjv",
+    "book": "Proverbs",
+    "chapter": 18,
+    "verse": 10,
+    "reference": "Proverbs 18:10",
+    "translation": "KJV",
+    "text": "The name of the LORD is a strong tower: the righteous runneth into it, and is safe.",
+    "topicIds": [
+      "refuge",
+      "trust"
+    ],
+    "explanation": "The name of the Lord is like a strong tower. Those who live rightly can run to him and be safe.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 17,
+    "isActive": true
+  },
+  {
+    "id": "psalm-56-3-kjv",
+    "book": "Psalms",
+    "chapter": 56,
+    "verse": 3,
+    "reference": "Psalm 56:3",
+    "translation": "KJV",
+    "text": "What time I am afraid, I will trust in thee.",
+    "topicIds": [
+      "fear",
+      "trust"
+    ],
+    "explanation": "A simple prayer for frightening moments: whenever I am afraid, I will trust in God.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 10,
+    "isActive": true
+  },
+  {
+    "id": "deuteronomy-31-6-kjv",
+    "book": "Deuteronomy",
+    "chapter": 31,
+    "verse": 6,
+    "reference": "Deuteronomy 31:6",
+    "translation": "KJV",
+    "text": "Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.",
+    "topicIds": [
+      "courage",
+      "faithfulness"
+    ],
+    "explanation": "Moses encouraged Israel before they entered the promised land: be strong and courageous, because God goes with you and will not fail or forsake you.",
+    "relatedScriptureIds": [
+      "isaiah-41-10-kjv",
+      "joshua-1-9-kjv",
+      "lamentations-3-22-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 35,
+    "isActive": true
+  },
+  {
+    "id": "2-timothy-1-7-kjv",
+    "book": "2 Timothy",
+    "chapter": 1,
+    "verse": 7,
+    "reference": "2 Timothy 1:7",
+    "translation": "KJV",
+    "text": "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",
+    "topicIds": [
+      "fear",
+      "strength"
+    ],
+    "explanation": "God has not given us a spirit of fear, but of power, love and a sound mind.",
+    "relatedScriptureIds": [
+      "isaiah-41-10-kjv",
+      "philippians-4-13-kjv",
+      "joshua-1-9-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 21,
+    "isActive": true
+  },
+  {
+    "id": "john-16-33-kjv",
+    "book": "John",
+    "chapter": 16,
+    "verse": 33,
+    "reference": "John 16:33",
+    "translation": "KJV",
+    "text": "These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.",
+    "topicIds": [
+      "peace",
+      "courage"
+    ],
+    "explanation": "Jesus warns that this world will bring trouble, but tells his followers to take heart, because he has overcome the world.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "isaiah-41-10-kjv",
+      "joshua-1-9-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 31,
+    "isActive": true
+  },
+  {
+    "id": "john-14-27-kjv",
+    "book": "John",
+    "chapter": 14,
+    "verse": 27,
+    "reference": "John 14:27",
+    "translation": "KJV",
+    "text": "Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
+    "topicIds": [
+      "peace",
+      "fear"
+    ],
+    "explanation": "Jesus gives his followers his own peace, which is different from what the world offers, so their hearts need not be troubled or afraid.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "isaiah-41-10-kjv",
+      "matthew-11-28-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 31,
+    "isActive": true
+  },
+  {
+    "id": "romans-10-9-kjv",
+    "book": "Romans",
+    "chapter": 10,
+    "verse": 9,
+    "reference": "Romans 10:9",
+    "translation": "KJV",
+    "text": "That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved.",
+    "topicIds": [
+      "salvation",
+      "faith"
+    ],
+    "explanation": "Paul explains that confessing Jesus as Lord and believing in your heart that God raised him from the dead leads to salvation.",
+    "relatedScriptureIds": [
+      "galatians-2-20-kjv",
+      "ephesians-2-8-kjv",
+      "john-14-6-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 29,
+    "isActive": true
+  },
+  {
+    "id": "romans-15-13-kjv",
+    "book": "Romans",
+    "chapter": 15,
+    "verse": 13,
+    "reference": "Romans 15:13",
+    "translation": "KJV",
+    "text": "Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost.",
+    "topicIds": [
+      "hope",
+      "joy",
+      "peace"
+    ],
+    "explanation": "Paul prays that the God of hope will fill believers with joy and peace as they trust him, so that they overflow with hope by the power of the Holy Spirit.",
+    "relatedScriptureIds": [
+      "galatians-5-22-kjv",
+      "psalm-23-1-kjv",
+      "romans-8-28-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 27,
+    "isActive": true
+  },
+  {
+    "id": "hebrews-13-5-kjv",
+    "book": "Hebrews",
+    "chapter": 13,
+    "verse": 5,
+    "reference": "Hebrews 13:5",
+    "translation": "KJV",
+    "text": "Let your conversation be without covetousness; and be content with such things as ye have: for he hath said, I will never leave thee, nor forsake thee.",
+    "topicIds": [
+      "contentment",
+      "faithfulness"
+    ],
+    "explanation": "In KJV English, \"conversation\" means your way of life. Live free from greed and be content with what you have, because God has promised never to leave or forsake you.",
+    "relatedScriptureIds": [
+      "philippians-4-13-kjv",
+      "lamentations-3-22-kjv",
+      "lamentations-3-23-kjv"
+    ],
+    "difficulty": 3,
+    "wordCount": 27,
+    "isActive": true
+  },
+  {
+    "id": "colossians-3-23-kjv",
+    "book": "Colossians",
+    "chapter": 3,
+    "verse": 23,
+    "reference": "Colossians 3:23",
+    "translation": "KJV",
+    "text": "And whatsoever ye do, do it heartily, as to the Lord, and not unto men;",
+    "topicIds": [
+      "work",
+      "obedience"
+    ],
+    "explanation": "Whatever work you do, do it wholeheartedly, as if you were working for the Lord rather than only for people.",
+    "relatedScriptureIds": [
+      "micah-6-8-kjv",
+      "matthew-22-37-kjv",
+      "matthew-28-19-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 15,
+    "isActive": true
+  },
+  {
+    "id": "1-thessalonians-5-16-kjv",
+    "book": "1 Thessalonians",
+    "chapter": 5,
+    "verse": 16,
+    "reference": "1 Thessalonians 5:16",
+    "translation": "KJV",
+    "text": "Rejoice evermore.",
+    "topicIds": [
+      "joy"
+    ],
+    "explanation": "A short command: rejoice always.",
+    "relatedScriptureIds": [
+      "1-thessalonians-5-17-kjv",
+      "psalm-37-4-kjv",
+      "psalm-118-24-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 2,
+    "isActive": true
+  },
+  {
+    "id": "1-thessalonians-5-17-kjv",
+    "book": "1 Thessalonians",
+    "chapter": 5,
+    "verse": 17,
+    "reference": "1 Thessalonians 5:17",
+    "translation": "KJV",
+    "text": "Pray without ceasing.",
+    "topicIds": [
+      "prayer"
+    ],
+    "explanation": "Keep praying without ceasing: stay in continual conversation with God.",
+    "relatedScriptureIds": [
+      "1-thessalonians-5-16-kjv",
+      "1-thessalonians-5-18-kjv",
+      "philippians-4-6-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 3,
+    "isActive": true
+  },
+  {
+    "id": "1-thessalonians-5-18-kjv",
+    "book": "1 Thessalonians",
+    "chapter": 5,
+    "verse": 18,
+    "reference": "1 Thessalonians 5:18",
+    "translation": "KJV",
+    "text": "In every thing give thanks: for this is the will of God in Christ Jesus concerning you.",
+    "topicIds": [
+      "gratitude",
+      "prayer"
+    ],
+    "explanation": "Give thanks in every circumstance, because this is God's will for those who are in Christ Jesus.",
+    "relatedScriptureIds": [
+      "1-thessalonians-5-17-kjv",
+      "philippians-4-6-kjv",
+      "philippians-4-7-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 17,
+    "isActive": true
+  },
+  {
+    "id": "psalm-139-14-kjv",
+    "book": "Psalms",
+    "chapter": 139,
+    "verse": 14,
+    "reference": "Psalm 139:14",
+    "translation": "KJV",
+    "text": "I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.",
+    "topicIds": [
+      "identity",
+      "gratitude"
+    ],
+    "explanation": "David praises God for making him so wonderfully. Every person is fearfully and wonderfully made by God.",
+    "relatedScriptureIds": [
+      "psalm-118-24-kjv",
+      "1-thessalonians-5-18-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 22,
+    "isActive": true
+  },
+  {
+    "id": "john-10-11-kjv",
+    "book": "John",
+    "chapter": 10,
+    "verse": 11,
+    "reference": "John 10:11",
+    "translation": "KJV",
+    "text": "I am the good shepherd: the good shepherd giveth his life for the sheep.",
+    "topicIds": [
+      "love",
+      "salvation"
+    ],
+    "explanation": "Jesus calls himself the good shepherd, who willingly gives his life for the sheep.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "john-3-16-kjv",
+      "romans-5-8-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 14,
+    "isActive": true
+  },
+  {
+    "id": "genesis-1-1-kjv",
+    "book": "Genesis",
+    "chapter": 1,
+    "verse": 1,
+    "reference": "Genesis 1:1",
+    "translation": "KJV",
+    "text": "In the beginning God created the heaven and the earth.",
+    "topicIds": [
+      "creation"
+    ],
+    "explanation": "The Bible's first words: God is the Creator of everything that exists.",
+    "relatedScriptureIds": [],
+    "difficulty": 1,
+    "wordCount": 10,
+    "isActive": true
+  },
+  {
+    "id": "isaiah-26-3-kjv",
+    "book": "Isaiah",
+    "chapter": 26,
+    "verse": 3,
+    "reference": "Isaiah 26:3",
+    "translation": "KJV",
+    "text": "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
+    "topicIds": [
+      "peace",
+      "trust"
+    ],
+    "explanation": "God keeps in perfect peace the person whose mind is fixed on him, because they trust in him.",
+    "relatedScriptureIds": [
+      "psalm-23-1-kjv",
+      "proverbs-3-5-kjv",
+      "proverbs-3-6-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 18,
+    "isActive": true
+  },
+  {
+    "id": "psalm-51-10-kjv",
+    "book": "Psalms",
+    "chapter": 51,
+    "verse": 10,
+    "reference": "Psalm 51:10",
+    "translation": "KJV",
+    "text": "Create in me a clean heart, O God; and renew a right spirit within me.",
+    "topicIds": [
+      "forgiveness",
+      "transformation"
+    ],
+    "explanation": "After his sin, David asks God to create a clean heart in him and renew a right spirit within him.",
+    "relatedScriptureIds": [
+      "romans-12-2-kjv",
+      "2-corinthians-5-17-kjv",
+      "1-john-1-9-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 15,
+    "isActive": true
+  },
+  {
+    "id": "1-john-4-19-kjv",
+    "book": "1 John",
+    "chapter": 4,
+    "verse": 19,
+    "reference": "1 John 4:19",
+    "translation": "KJV",
+    "text": "We love him, because he first loved us.",
+    "topicIds": [
+      "love"
+    ],
+    "explanation": "Our love for God is a response: we love him because he first loved us.",
+    "relatedScriptureIds": [
+      "john-3-16-kjv",
+      "romans-5-8-kjv",
+      "matthew-22-37-kjv"
+    ],
+    "difficulty": 1,
+    "wordCount": 8,
+    "isActive": true
+  },
+  {
+    "id": "ephesians-4-32-kjv",
+    "book": "Ephesians",
+    "chapter": 4,
+    "verse": 32,
+    "reference": "Ephesians 4:32",
+    "translation": "KJV",
+    "text": "And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ’s sake hath forgiven you.",
+    "topicIds": [
+      "kindness",
+      "forgiveness"
+    ],
+    "explanation": "Be kind and tender-hearted toward one another, forgiving each other just as God has forgiven you for Christ's sake.",
+    "relatedScriptureIds": [
+      "1-john-1-9-kjv",
+      "micah-6-8-kjv",
+      "psalm-51-10-kjv"
+    ],
+    "difficulty": 2,
+    "wordCount": 20,
+    "isActive": true
+  }
+]
