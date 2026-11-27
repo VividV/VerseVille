@@ -4,7 +4,7 @@ import { getItem } from '../../engine/garden/catalog'
 import { PERMANENT_ITEMS } from '../../engine/garden/startingGarden'
 import { Modal } from '../common/Modal'
 import { Button } from '../common/Button'
-import { ItemArt } from './itemArt'
+import { VillageItemThumb } from '../village/VillageItemThumb'
 
 /** Details and actions for a placed item (spec Screen 3: tap building / decoration). */
 export function GardenItemModal({
@@ -52,7 +52,7 @@ export function GardenItemModal({
       }
     >
       <div className="flex items-center gap-4">
-        <ItemArt art={def.art} width={def.width} height={def.height} className="h-20 w-20 shrink-0" />
+        <VillageItemThumb itemId={def.id} className="h-24 w-24 shrink-0" />
         <p className="text-ink-soft">{def.description}</p>
       </div>
     </Modal>

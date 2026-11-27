@@ -53,7 +53,8 @@ Installing needs HTTPS, which Vercel provides. When you release changes, users g
 src/
   app/          App entry, router (with new/returning player guards), providers (loading + accessibility)
   components/
-    garden/     GardenCanvas, item drawings (itemArt), placement bar, item & land modals
+    village/    VillageScene (isometric garden: scenery, camera, placement), villageArt (item drawings), thumbnails
+    garden/     placement bar, item & land modals
     games/      MissingWordsGame, WordOrderGame (tap + drag), VerseRecallGame, results & feedback
     scripture/  ScriptureCard, ScriptureText, ScriptureExplanation, MasteryBadge, ScriptureProgress
     common/     Button, Card, Modal, ProgressBar, LoadingState, EmptyState, GardenBackdrop
@@ -138,8 +139,12 @@ repeat of the same id makes the database refuse the whole save. Rewards can't be
 - New players start with a cottage, the Scripture Tree, three flower beds and a path. The pond can't be built on.
 - Items (`src/data/buildings.json`, `decorations.json`) have a size, coin/seed cost, unlock level and whether they're
   unique. Unique buildings can be owned once; decorations, plants and paths can be bought again and again.
-- Buying puts an item in "Ready to place". Placing: tap a spot, check the preview, Confirm. Tap any item to move it or
-  put it away (the cottage and Scripture Tree always stay). Tapping the Scripture Tree continues learning.
+- The garden is drawn as an isometric (2.5D) Bible-lands village (`src/components/village`): limestone houses, olive
+  trees, a spring, terraced hills, a lake and village life (doves, travellers, sheep, chickens, butterflies, smoke).
+  Drag to look around; pinch, scroll or use + − to zoom. All animation stops with Reduce motion.
+- Buying puts an item in "Ready to place". Placing zooms in and shows a faint grid: tap a spot, check the gold (fits) or
+  red (doesn't fit) preview, Confirm. Tap any item to move it or put it away (the cottage and Scripture Tree always
+  stay). Tapping the Scripture Tree continues learning.
 - Purchases and land are recorded as transactions with negative amounts, saved together with the new balance.
 
 ## Daily quests, collection and progress

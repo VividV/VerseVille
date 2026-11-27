@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Card } from '../components/common/Card'
-import { GardenCanvas, type CanvasMode } from '../components/garden/GardenCanvas'
+import { VillageScene, type VillageMode } from '../components/village/VillageScene'
+import { VillageItemThumb } from '../components/village/VillageItemThumb'
 import { BuildingPlacement } from '../components/garden/BuildingPlacement'
 import { GardenItemModal } from '../components/garden/GardenItemModal'
 import { ExpansionModal } from '../components/garden/ExpansionModal'
-import { ItemArt } from '../components/garden/itemArt'
 import { getItem } from '../engine/garden/catalog'
 import { GRID_COLUMNS, unlockedRowCount, validatePlacement } from '../engine/garden/gardenGrid'
 import { checkExpansion, nextExpansion } from '../engine/progression/gardenUnlocks'
@@ -21,6 +21,10 @@ import { canClaim } from '../engine/quests/questEngine'
 import { playSound } from '../services/audio/soundService'
 import { Celebration } from '../components/common/Celebration'
 
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
+}
+
 const REASON_TEXT = {
   review: 'Due for review',
   continue: 'Pick up where you left off',
@@ -32,13 +36,13 @@ export function GardenScreen() {
   const profile = useGameStore((s) => s.profile)
   const resources = useGameStore((s) => s.resources)
   const progressById = useGameStore((s) => s.scriptureProgress)
-  const { dailyGoal, preferredTranslation } = useSettingsStore((s) => s.settings)
+  const { dailyGoal, preferredTranslation, reducedMotion } = useSettingsStore((s) => s.settings)
   const { items, inventory, expansionsUnlocked, placeItem, moveItem, putAway, unlockExpansion } = useGardenStore()
 
   // "?place=bench" (from the shop) starts placement mode.
   const placeParam = params.get('place')
   const placeDef = placeParam && (inventory[placeParam] ?? 0) > 0 ? getItem(placeParam) : undefined
-  const [mode, setMode] = useState<CanvasMode>(() => (placeDef ? { kind: 'place', def: placeDef, target: null } : { kind: 'view' }))
+  const [mode, setMode] = useState<VillageMode>(() => (placeDef ? { kind: 'place', def: placeDef, target: null } : { kind: 'view' }))
   const [selected, setSelected] = useState<PlacedGardenItem | null>(null)
   const [showExpansion, setShowExpansion] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -130,15 +134,19 @@ export function GardenScreen() {
         </p>
       )}
 
-      <GardenCanvas
+      <VillageScene
         items={items}
         expansionsUnlocked={expansionsUnlocked}
+        animate={!reducedMotion && !prefersReducedMotion()}
         mode={mode}
         justPlacedId={justPlacedId}
         onTileTap={onTileTap}
         onItemTap={(item) => setSelected(item)}
         onLockedTap={() => setShowExpansion(true)}
       />
+      {mode.kind === 'view' && (
+        <p className="-mt-2 text-center text-xs text-ink-soft">Drag to look around · pinch or use + − to zoom · tap anything</p>
+      )}
 
       {mode.kind === 'view' && (
         <>
@@ -194,7 +202,7 @@ export function GardenScreen() {
                         className="flex min-h-11 w-24 flex-col items-center gap-1 rounded-2xl bg-white p-2 text-xs font-bold text-ink shadow-sm hover:bg-leaf-light"
                         aria-label={`Place ${def.name} (${quantity} available)`}
                       >
-                        <ItemArt art={def.art} width={def.width} height={def.height} className="h-12 w-12" />
+                        <VillageItemThumb itemId={itemId} className="h-12 w-12" />
                         <span className="truncate">{def.name}</span>
                         <span className="text-ink-soft">×{quantity}</span>
                       </button>

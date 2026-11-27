@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '../components/common/Button'
-import { ItemArt } from '../components/garden/itemArt'
+import { VillageItemThumb } from '../components/village/VillageItemThumb'
 import { SHOP_CATEGORIES, getShopItems } from '../engine/garden/catalog'
 import { checkPurchase, ownedCount } from '../engine/garden/shop'
 import { useGameStore } from '../store/gameStore'
@@ -71,8 +71,8 @@ export function GardenShopScreen() {
           const lockedByLevel = !check.ok && check.reason === 'level'
           return (
             <li key={item.id} className="flex gap-3 rounded-card bg-cream p-3 shadow-soft">
-              <div className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#8FC184]/60 p-1 ${lockedByLevel ? 'opacity-50 grayscale' : ''}`}>
-                <ItemArt art={item.art} width={item.width} height={item.height} className="h-full w-full" />
+              <div className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#E9D6A6] p-1 ${lockedByLevel ? 'opacity-50 grayscale' : ''}`}>
+                <VillageItemThumb itemId={item.id} className="h-full w-full" />
               </div>
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <h2 className="font-extrabold text-leaf-dark">{item.name}</h2>
