@@ -5,6 +5,8 @@ import { WelcomeScreen } from '../screens/WelcomeScreen'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { GardenScreen } from '../screens/GardenScreen'
 import { ProfileScreen } from '../screens/ProfileScreen'
+import { ScriptureLibraryScreen } from '../screens/ScriptureLibraryScreen'
+import { ScriptureDetailScreen } from '../screens/ScriptureDetailScreen'
 import { ComingSoonScreen } from '../screens/ComingSoonScreen'
 import { NotFoundScreen } from '../screens/NotFoundScreen'
 
@@ -36,16 +38,8 @@ export const routes: RouteObject[] = [
         element: <AppShell />,
         children: [
           { path: '/garden', element: <GardenScreen /> },
-          {
-            path: '/scriptures',
-            element: (
-              <ComingSoonScreen
-                title="Scriptures"
-                icon="📖"
-                message="The scripture library is the next thing we're planting. You'll be able to browse, search and learn verses here."
-              />
-            ),
-          },
+          { path: '/scriptures', element: <ScriptureLibraryScreen /> },
+          { path: '/scriptures/:scriptureId', element: <ScriptureDetailScreen /> },
           {
             path: '/quests',
             element: (

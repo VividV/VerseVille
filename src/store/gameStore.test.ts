@@ -4,7 +4,7 @@ import { DEFAULT_SETTINGS, useSettingsStore } from './settingsStore'
 import { closeDatabase } from '../services/persistence/localDatabase'
 
 function resetMemory() {
-  useGameStore.setState({ status: 'loading', profile: null, resources: null, errorMessage: null })
+  useGameStore.setState({ status: 'loading', profile: null, resources: null, errorMessage: null, scriptureProgress: {} })
   useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
 }
 

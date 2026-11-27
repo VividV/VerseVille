@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Card } from '../components/common/Card'
 import { GardenBackdrop } from '../components/common/GardenBackdrop'
 import { useGameStore } from '../store/gameStore'
@@ -19,9 +20,15 @@ export function GardenScreen() {
         <h2 className="text-lg font-extrabold text-leaf-dark">Today's Scripture Journey</h2>
         <p className="mt-1 text-ink-soft">
           Your daily goal is <strong className="text-ink">{dailyGoal}</strong>{' '}
-          {dailyGoal === 1 ? 'scripture' : 'scriptures'}. Scripture learning and the interactive garden are being
-          planted next.
+          {dailyGoal === 1 ? 'scripture' : 'scriptures'}. Memorisation games and the interactive garden are being
+          planted next. Meanwhile, explore the verses you'll learn.
         </p>
+        <Link
+          to="/scriptures"
+          className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-leaf px-5 font-bold text-white shadow-soft hover:bg-leaf-dark"
+        >
+          Browse scriptures
+        </Link>
       </Card>
     </div>
   )

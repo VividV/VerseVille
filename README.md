@@ -11,8 +11,8 @@ Built in phases, following the product specification.
 | Phase | What | Status |
 | --- | --- | --- |
 | 1 | Project foundation: app shell, routing, design system, state, local saving | ✅ Done |
-| 2 | Scripture engine: dataset, library, detail, search & filters | Next |
-| 3 | Memorisation games | — |
+| 2 | Scripture engine: dataset, library, detail, search & filters | ✅ Done |
+| 3 | Memorisation games | Next |
 | 4 | Learning engine (mastery, spaced repetition) | — |
 | 5 | Reward engine (XP, coins, seeds, levels) | — |
 | 6 | Interactive garden | — |
@@ -39,16 +39,26 @@ To try it on an Android phone on the same Wi-Fi: `npm run dev -- --host`, then o
 src/
   app/          App entry, router (with new/returning player guards), providers (loading + accessibility)
   components/
+    scripture/  ScriptureCard, ScriptureText, ScriptureExplanation, MasteryBadge, ScriptureProgress
     common/     Button, Card, Modal, ProgressBar, LoadingState, EmptyState, GardenBackdrop
     layout/     AppShell, TopResourceBar, BottomNavigation, icons
   screens/      One file per screen
-  engine/       Game rules (no React here) — rewards/economy.ts holds starting resources
+  data/         scriptures.json (66 KJV verses), topics.json — generated, see scripts/scripture-data/
+  engine/       Game rules (no React here)
+    scripture/  catalogue lookups, search & filters, learning status
+    rewards/    economy.ts (starting resources)
   store/        Zustand stores: gameStore (player, resources), settingsStore
   services/
     persistence/ localDatabase.ts (IndexedDB wrapper), saveService.ts (what gets saved)
   types/        TypeScript types
-  utils/        Dates (player's local day), ids
+  utils/        Dates (player's local day), ids, text normalisation
 ```
 
 Rules of thumb: screens never talk to IndexedDB directly (they go through stores → `saveService`), and game
 calculations live in `src/engine`, not in components. Design colours are tokens in `src/index.css`.
+
+## Scripture content
+
+The library holds 66 King James Version verses (public domain). Verse text was taken from published KJV data and
+cross-checked word-for-word against a second independent source; see `scripts/scripture-data/README.md`.
+Explanations were written for VerseVille and should be reviewed by a trusted reader before public release.

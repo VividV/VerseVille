@@ -4,7 +4,8 @@
  * so cloud sync (Phase 8) can later hook in at one point.
  */
 import type { PlayerProfile, PlayerResources, PlayerSettings } from '../../types/player'
-import { clearAllStores, getRecord, putRecord, putRecordsAtomically } from './localDatabase'
+import type { PlayerScripture } from '../../types/scripture'
+import { clearAllStores, getAllRecords, getRecord, putRecord, putRecordsAtomically } from './localDatabase'
 
 /** Guest mode keeps exactly one player on the device, stored under this key. */
 const PLAYER_KEY = 'current'
@@ -45,6 +46,16 @@ export function saveResources(resources: PlayerResources): Promise<void> {
 
 export function saveSettings(settings: PlayerSettings): Promise<void> {
   return putRecord('settings', PLAYER_KEY, settings)
+}
+
+/** Loads the player's progress on every scripture they have started, keyed by scripture id. */
+export async function loadScriptureProgress(): Promise<Record<string, PlayerScripture>> {
+  const records = await getAllRecords<PlayerScripture>('scriptureProgress')
+  return Object.fromEntries(records.map((r) => [r.scriptureId, r]))
+}
+
+export function saveScriptureProgress(progress: PlayerScripture): Promise<void> {
+  return putRecord('scriptureProgress', progress.scriptureId, progress)
 }
 
 /** Deletes ALL saved progress on this device. */

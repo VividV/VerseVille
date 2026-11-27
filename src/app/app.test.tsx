@@ -8,7 +8,7 @@ import { useGameStore } from '../store/gameStore'
 import { DEFAULT_SETTINGS, useSettingsStore } from '../store/settingsStore'
 
 function renderApp(path: string) {
-  useGameStore.setState({ status: 'loading', profile: null, resources: null, errorMessage: null })
+  useGameStore.setState({ status: 'loading', profile: null, resources: null, errorMessage: null, scriptureProgress: {} })
   useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
   const router = createTestRouter(path)
   render(

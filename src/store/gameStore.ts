@@ -1,7 +1,14 @@
 import { create } from 'zustand'
 import type { DailyGoal, PlayerProfile, PlayerResources, TranslationCode } from '../types/player'
 import { STARTING_RESOURCES } from '../engine/rewards/economy'
-import { loadGame, resetAllProgress, saveNewGame, saveProfile } from '../services/persistence/saveService'
+import type { PlayerScripture } from '../types/scripture'
+import {
+  loadGame,
+  loadScriptureProgress,
+  resetAllProgress,
+  saveNewGame,
+  saveProfile,
+} from '../services/persistence/saveService'
 import { createId } from '../utils/idUtils'
 import { nowIso } from '../utils/dateUtils'
 import { DEFAULT_SETTINGS, useSettingsStore } from './settingsStore'
@@ -19,6 +26,8 @@ interface GameState {
   errorMessage: string | null
   profile: PlayerProfile | null
   resources: PlayerResources | null
+  /** Progress on each started scripture, keyed by scripture id. Empty until a scripture is learned. */
+  scriptureProgress: Record<string, PlayerScripture>
 
   /** Loads saved progress from the device. Call once at startup. */
   hydrate: () => Promise<void>
@@ -42,17 +51,18 @@ export const useGameStore = create<GameState>()((set, get) => ({
   errorMessage: null,
   profile: null,
   resources: null,
+  scriptureProgress: {},
 
   hydrate: async () => {
     set({ status: 'loading', errorMessage: null })
     try {
-      const saved = await loadGame()
+      const [saved, scriptureProgress] = await Promise.all([loadGame(), loadScriptureProgress()])
       if (saved) {
         useSettingsStore.setState({ settings: { ...DEFAULT_SETTINGS, ...saved.settings } })
-        set({ status: 'ready', profile: saved.profile, resources: saved.resources })
+        set({ status: 'ready', profile: saved.profile, resources: saved.resources, scriptureProgress })
       } else {
         useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
-        set({ status: 'ready', profile: null, resources: null })
+        set({ status: 'ready', profile: null, resources: null, scriptureProgress: {} })
       }
     } catch (error) {
       set({
@@ -71,7 +81,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
     const settings = { ...DEFAULT_SETTINGS, preferredTranslation, dailyGoal }
     await saveNewGame({ profile, resources, settings })
     useSettingsStore.setState({ settings })
-    set({ profile, resources })
+    set({ profile, resources, scriptureProgress: {} })
   },
 
   updateDisplayName: async (displayName) => {
@@ -87,6 +97,6 @@ export const useGameStore = create<GameState>()((set, get) => ({
   resetProgress: async () => {
     await resetAllProgress()
     useSettingsStore.setState({ settings: DEFAULT_SETTINGS })
-    set({ profile: null, resources: null })
+    set({ profile: null, resources: null, scriptureProgress: {} })
   },
 }))
