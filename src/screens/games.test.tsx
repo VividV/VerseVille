@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterProvider } from 'react-router-dom'
 import { AppProviders } from '../app/providers'
@@ -55,7 +55,8 @@ describe('game flow', () => {
     }
     await user.click(screen.getByRole('button', { name: 'Finish' }))
 
-    expect(router.state.location.pathname).toBe('/game-complete')
+    // Saving is asynchronous: wait for the completion screen.
+    await waitFor(() => expect(router.state.location.pathname).toBe('/game-complete'))
     expect(await screen.findByText('0%')).toBeInTheDocument()
     expect(screen.getByText(/0 of 2 right first time · 2 hints/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /continue: word order/i })).toBeInTheDocument()
@@ -84,7 +85,7 @@ describe('game flow', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Perfect order')
     await user.click(screen.getByRole('button', { name: 'Finish' }))
 
-    expect(router.state.location.pathname).toBe('/game-complete')
+    await waitFor(() => expect(router.state.location.pathname).toBe('/game-complete'))
     // Both tiles were wrong at the first check.
     expect(await screen.findByText(/0 of 2 right first time/)).toBeInTheDocument()
   })
